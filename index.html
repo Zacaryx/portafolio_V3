@@ -81,6 +81,38 @@
     const projectsData = [
       {
         id: 1,
+        title: "Aqua Ingenieros — Portal Web",
+        category: "Web Frontend",
+        shortDescription: "Sitio web corporativo para consultoría e ingeniería.",
+        fullDescription: "Portal web desarrollado para Aqua Ingenieros. Presenta servicios, portfolio y contacto. Optimizado y responsive.",
+        images: [
+          "assets/images/aquaingenierosv1.1.PNG.webp",
+          "assets/images/aquaingenierosv1.2.PNG.webp",
+          "assets/images/aquaingenierosv1.3.PNG.webp",
+        ],
+        tags: ["HTML", "CSS", "Web"],
+        driveLink: null,
+        driveLinkLabel: null,
+        note: null,
+        github: "https://github.com/Zacaryx/aquaingenierosv4",
+        demo: "https://aquaingenieros.com",
+      },
+      {
+        id: 2,
+        title: "Portafolio V3 — Código Libre",
+        category: "Web Frontend",
+        shortDescription: "Versión abierta de este mismo portafolio (código libre).",
+        fullDescription: "Código abierto del portafolio; útil como referencia de estructura y componentes.",
+        images: [],
+        tags: ["React", "Open Source"],
+        driveLink: null,
+        driveLinkLabel: null,
+        note: "📂 ¡Estás viendo esta página ahora! Es el mismo portafolio disponible como código open source en GitHub.",
+        github: "https://github.com/Zacaryx/portafolio_V3",
+        demo: "https://portafolio-v3.vercel.app",
+      },
+      {
+        id: 3,
         title: "Excel VBA Macro — Balance Financiero",
         category: "Analítica",
         shortDescription: "Macro VBA para automatizar cálculos en el historial de balance financiero de cuentas corrientes y flujos de caja.",
@@ -445,12 +477,12 @@ function WebpImage({ src, alt, className, onError, onClick, style }) {
                 <div className="relative group">
                   <div className="absolute inset-0 bg-gradient-to-tr from-accentNeon to-accentPurple rounded-3xl blur-md opacity-40 group-hover:opacity-60 transition duration-500"></div>
                   <div className="relative bg-darkCard border border-slate-800 p-4 rounded-3xl w-72 sm:w-80">
-                    <div className="rounded-2xl w-full h-80 bg-slate-900 flex items-center justify-center border border-slate-800">
-                      <div className="text-center space-y-3">
-                        <div className="w-20 h-20 bg-gradient-to-br from-accentNeon/20 to-accentPurple/20 rounded-full flex items-center justify-center mx-auto border border-slate-700">
-                          <i className="fa-solid fa-code text-3xl text-accentNeon"></i>
-                        </div>
-                        <p className="code-font text-xs text-slate-500">eduardo.dev</p>
+                    <div className="rounded-2xl w-full h-80 bg-slate-900 flex items-center justify-center border border-slate-800 overflow-hidden">
+                      <div className="w-full h-full flex items-center justify-center">
+                        <WebpImage src={"assets/images/imageMe.webp"} alt={"Eduardo Zacary - eduardo.dev"} className="object-cover w-full h-full rounded-2xl" />
+                      </div>
+                      <div className="absolute bottom-4 left-4 bg-slate-900/70 px-3 py-1 rounded-md border border-slate-800">
+                        <p className="code-font text-xs text-slate-200">eduardo.dev</p>
                       </div>
                     </div>
                     <div className="mt-4 flex items-center justify-between">
