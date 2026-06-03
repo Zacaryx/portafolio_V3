@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eduardo Vargas | Ingeniero de Software Frontend</title>
+
+  <!--
+    =====================================================
+    ESTILOS AUTO-HOSPEDADOS (sin CDN)
+    - tailwind.min.css  → generado con:
+        npx tailwindcss -i input.css -o assets/css/tailwind.min.css --minify
+    - fontawesome.min.css → @fortawesome/fontawesome-free (npm)
+    - fonts.css         → Inter + JetBrains Mono desde @fontsource (npm)
+    =====================================================
+  -->
+  <link rel="stylesheet" href="assets/css/tailwind.min.css">
+  <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+  <link rel="stylesheet" href="assets/css/fonts.css">
+
+  <!--
+    React + ReactDOM (builds UMD de producción desde npm)
+    Babel Standalone: compila JSX en el browser.
+    ⚠️  En producción real migrar a Vite/CRA/Next y eliminar Babel.
+  -->
+  <script src="assets/js/react.production.min.js"></script>
+  <script src="assets/js/react-dom.production.min.js"></script>
+  <script src="assets/js/babel.min.js"></script>
+
+  <style>
+    /* Tipografía base */
+    body       { font-family: 'Inter', sans-serif; background-color: #0b0f19; color: #f1f5f9; }
+    .code-font { font-family: 'JetBrains Mono', monospace; }
+
+    /* Scrollbar personalizado */
+    ::-webkit-scrollbar            { width: 8px; }
+    ::-webkit-scrollbar-track      { background: #0b0f19; }
+    ::-webkit-scrollbar-thumb      { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover{ background: #06b6d4; }
+
+    /*
+      Colores custom de Tailwind como clases CSS planas.
+      Tailwind v3 con JIT los genera automáticamente cuando
+      le pasas el config; aquí los declaramos por si acaso
+      el purge no los captura todos en JSX.
+    */
+    .bg-darkBg         { background-color: #0b0f19; }
+    .bg-darkCard       { background-color: #151c2c; }
+    .text-accentNeon   { color: #06b6d4; }
+    .text-accentPurple { color: #8b5cf6; }
+    .bg-accentNeon     { background-color: #06b6d4; }
+    .border-accentNeon { border-color: #06b6d4; }
+    .from-accentNeon   { --tw-gradient-from: #06b6d4; }
+    .to-accentPurple   { --tw-gradient-to:   #8b5cf6; }
+  </style>
+</head>
+
+<body class="antialiased min-h-screen selection:bg-cyan-500 selection:text-slate-900">
+
+  <!-- Punto de montaje de React -->
+  <div id="root"></div>
+
+  <script type="text/babel">
+    /*
+      =====================================================
+      PORTAFOLIO — Eduardo Vargas
+      Stack: React 18 (UMD) + Babel standalone + Tailwind
+      =====================================================
+    */
+
+    const { useState } = React;
+
+    /*
+      ─── DATOS: Proyectos ───────────────────────────────
+      Imágenes referenciadas en WebP.
+      Antes de subir al repo, ejecuta:
+        node convert-to-webp.js
+      Ese script convierte los PNG originales a WebP y los
+      deja en la misma carpeta assets/images/.
+    */
+    const projectsData = [
+      {
+        id: 1,
+        title: "Aqua Ingenieros — Portal Web",
+        category: "Web Frontend",
+        shortDescription: "Sitio web corporativo para empresa de consultoría e ingeniería. Showcase de servicios y portafolio profesional.",
+        fullDescription: "Portal web completo desarrollado para Aqua Ingenieros, una empresa especializada en consultoría e ingeniería. El sitio presenta los servicios de la empresa, portfolio de proyectos realizados y brinda información de contacto. Desarrollado con tecnologías frontend modernas, responsive design y optimizado para SEO. La plataforma permite a los clientes conocer mejor los servicios y realizar consultas de manera efectiva.",
+        images: [
+          "assets/images/aquaingenierosv1.1.PNG.webp",
+          "assets/images/aquaingenierosv1.2.PNG.webp",
+          "assets/images/aquaingenierosv1.3.PNG.webp",
+        ],
+        tags: ["React", "Tailwind CSS", "Web Design", "Responsive"],
+        driveLink: null,
+        driveLinkLabel: null,
+        note: null,
+        github: "https://github.com/Zacaryx/aquaingenierosv4",
+        demo: "https://aquaingenieros.com",
+      },
+      {
+        id: 2,
+        title: "Portafolio V3 — Mi Portafolio Personal",
+        category: "Web Frontend",
+        shortDescription: "Versión anterior de mi portafolio personal. Código open source y libre para consultar.",
+        fullDescription: "Versión anterior de mi portafolio personal, disponible como código libre y open source. Este proyecto es útil como referencia para entender mi evolución como desarrollador. Contiene la misma información de proyectos y habilidades presentada de manera diferente, demostrando distintos enfoques en diseño y estructura de componentes React.",
+        images: [],
+        tags: ["React", "Code Libre", "Portfolio", "Open Source"],
+        driveLink: null,
+        driveLinkLabel: null,
+        note: "📂 ¡Estás viendo esta página ahora! Es el mismo portafolio disponible como código open source en GitHub.",
+        github: "https://github.com/Zacaryx/portafolio_V3",
+        demo: "https://portafolio-v3.vercel.app",
+      },
+      {
+        id: 3,
+        title: "Excel VBA Macro — Balance Financiero",
+        category: "Analítica",
+        shortDescription: "Macro VBA para automatizar cálculos en el historial de balance financiero de cuentas corrientes y flujos de caja.",
+        fullDescription: "Desarrollé una solución robusta en VBA (Macros) diseñada para optimizar el control de cuentas corrientes y flujos de caja. El cliente necesitaba procesar una base de datos de tamaño variable donde los registros desorganizados impedían ver el saldo real de la cuenta en fechas específicas. Desafíos resueltos: Gestión Dinámica de Datos — la herramienta identifica automáticamente el fin de la tabla (sin importar si hay 100 o 100.000 registros). Ordenamiento Lógico — limpieza y ordenamiento automático por Fecha y Número de Orden, asegurando que el historial sea cronológicamente preciso. Cálculo de Saldo Acumulado — implementé un algoritmo que calcula el saldo fila por fila, permitiendo visualizar cómo cada compra y pago afectó el saldo en ese momento exacto.",
+        images: [
+          /* Excel — versión 1 y 2 */
+          "assets/images/excelv1.1.webp",
+          "assets/images/excelv1.2.webp",
+          "assets/images/excelv2.1.webp",
+          "assets/images/excelv2.2.webp",
+          "assets/images/excelv2.3.webp",
+          "assets/images/excelv2.4.webp",
+        ],
+        tags: ["Excel", "VBA", "Macros", "Finanzas", "Automatización"],
+        driveLink: "https://drive.google.com/drive/folders/1QiF0s5RCBvbZUc_FfXJEyHYmIZOIgcbl?usp=sharing",
+        driveLinkLabel: "Ver Carpeta en Drive",
+        note: "⚠️ Dar permisos para macros VBA y abrir directamente en el computador, no en la nube.",
+        github: null,
+        demo: null,
+      },
+      {
+        id: 3,
+        title: "Excel VBA Macro — Balance Financiero",
+        category: "Analítica",
+        shortDescription: "Macro VBA para automatizar cálculos en el historial de balance financiero de cuentas corrientes y flujos de caja.",
+        fullDescription: "Desarrollé una solución robusta en VBA (Macros) diseñada para optimizar el control de cuentas corrientes y flujos de caja. El cliente necesitaba procesar una base de datos de tamaño variable donde los registros desorganizados impedían ver el saldo real de la cuenta en fechas específicas. Desafíos resueltos: Gestión Dinámica de Datos — la herramienta identifica automáticamente el fin de la tabla (sin importar si hay 100 o 100.000 registros). Ordenamiento Lógico — limpieza y ordenamiento automático por Fecha y Número de Orden, asegurando que el historial sea cronológicamente preciso. Cálculo de Saldo Acumulado — implementé un algoritmo que calcula el saldo fila por fila, permitiendo visualizar cómo cada compra y pago afectó el saldo en ese momento exacto.",
+        images: [
+          /* Excel — versión 1 y 2 */
+          "assets/images/excelv1.1.webp",
+          "assets/images/excelv1.2.webp",
+          "assets/images/excelv2.1.webp",
+          "assets/images/excelv2.2.webp",
+          "assets/images/excelv2.3.webp",
+          "assets/images/excelv2.4.webp",
+        ],
+        tags: ["Excel", "VBA", "Macros", "Finanzas", "Automatización"],
+        driveLink: "https://drive.google.com/drive/folders/1QiF0s5RCBvbZUc_FfXJEyHYmIZOIgcbl?usp=sharing",
+        driveLinkLabel: "Ver Carpeta en Drive",
+        note: "⚠️ Dar permisos para macros VBA y abrir directamente en el computador, no en la nube.",
+        github: null,
+        demo: null,
+      },
+      {
+        id: 4,
+        title: "Dashboard Power BI — Analítica Empresarial",
+        category: "Analítica",
+        shortDescription: "Dashboard interactivo en Power BI para visualización y análisis de datos empresariales.",
+        fullDescription: "Dashboard desarrollado en Power BI para la visualización avanzada de datos empresariales. Permite analizar métricas clave, tendencias y KPIs de forma interactiva, facilitando la toma de decisiones basada en datos reales.",
+        images: [
+          /* Power BI */
+          "assets/images/powerbiv1.1.webp",
+          "assets/images/powerbiv1.2.webp",
+        ],
+        tags: ["Power BI", "SQL Server", "Analítica", "Visualización de Datos", "KPIs"],
+        driveLink: "https://drive.google.com/file/d/1LhKbY_Z354dColyMNAJGmI_KFY4P-I3H/view?usp=sharing",
+        driveLinkLabel: "Ver Dashboard en Drive",
+        note: null,
+        github: null,
+        demo: null,
+      },
+      {
+        id: 5,
+        title: "Café Andino — Landing Page",
+        category: "Web Frontend",
+        shortDescription: "Página web para cafetería usando Bootstrap. Proyecto BETA en desarrollo.",
+        fullDescription: "Landing page diseñada para Café Andino utilizando Bootstrap como framework CSS principal. Proyecto en estado BETA, sin terminar, que contempla secciones de menú, historia del café, ubicación y contacto.",
+        images: [
+          /* Café Andino */
+          "assets/images/coffeev1.1.webp",
+          "assets/images/coffeev1.2.webp",
+          "assets/images/coffeev1.3.webp",
+          "assets/images/coffeev1.4.webp",
+          "assets/images/coffeev1.5.webp",
+          "assets/images/coffeev1.6.webp",
+        ],
+        tags: ["HTML", "CSS", "Bootstrap", "Landing Page"],
+        driveLink: null,
+        driveLinkLabel: null,
+        note: "🚧 Página estática, sin backend",
+        github: "https://github.com/Zacaryx/coffee-page--cafe-andino-",
+        demo: "https://coffee-page-cafe-andino.vercel.app/",
+      },
+      {
+        id: 6,
+        title: "AppWebForBusiness Beta v2",
+        category: "Web Frontend",
+        shortDescription: "App web para minimarkets: registro de productos, análisis, ventas y gestión interna. Segunda versión con mejor lógica de backend.",
+        fullDescription: "Aplicación web enfocada a minimarkets para el registro de productos, análisis de productos, ventas y gestión interna. Desarrollada con HTML, CSS, JavaScript y Google Firebase como backend. Esta es la segunda versión (BetaV2) con una lógica de backend significativamente mejorada respecto a la primera versión.",
+        images: [
+          /* AppWeb for Business */
+          "assets/images/appWebv1.1.webp",
+          "assets/images/appWebv1.2.webp",
+          "assets/images/appWebv1.3.webp",
+          "assets/images/appWebv1.4.webp",
+          "assets/images/appWebv1.5.webp",
+        ],
+        tags: ["HTML", "CSS", "JavaScript", "Firebase", "Backend", "Gestión"],
+        driveLink: null,
+        driveLinkLabel: null,
+        note: "🔐 Ingresar con usuario: Zacaryx y contraseña: 123456. Proyecto BETA sin terminar",
+        github: "https://github.com/Zacaryx/AppWebForBusinessBetav2",
+        demo: "https://app-web-for-business-betav2.vercel.app/",
+      },
+    ];
+
+    /* ─── DATOS: Stack / Habilidades ─────────────────── */
+    const skillsData = [
+      {
+        category: "Frontend",
+        items: ["React", "TypeScript", "JavaScript", "Node.js", "Tailwind CSS", "CSS Grid", "Flexbox"],
+      },
+      {
+        category: "Visualización & Datos",
+        items: ["Excel Avanzado", "SQL Server Management", "Google Firebase", "Power BI"],
+      },
+      {
+        category: "Tooling & Cloud",
+        items: ["Git & GitHub", "Webpack"],
+      },
+    ];
+
+    const categories = ["All", "Analítica", "Web Frontend"];
+
+    /* ─── COMPONENTE: LightboxImage ────────────────────
+       Overlay fullscreen para ampliar la imagen.
+       Cierra con Escape o clic fuera.
+    ──────────────────────────────────────────────────── */
+    function LightboxImage({ src, alt, onClose }) {
+      React.useEffect(() => {
+        const handler = (e) => { if (e.key === "Escape") onClose(); };
+        window.addEventListener("keydown", handler);
+        return () => window.removeEventListener("keydown", handler);
+      }, [onClose]);
+
+      return (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/95 backdrop-blur-sm p-4"
+          onClick={onClose}
+        >
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 w-10 h-10 bg-slate-900 border border-slate-700 rounded-full flex items-center justify-center text-slate-300 hover:text-white transition z-10"
+          >
+            <i className="fa-solid fa-xmark text-lg"></i>
+          </button>
+          <img
+            src={src} alt={alt}
+            onClick={(e) => e.stopPropagation()}
+            className="max-w-full max-h-[90vh] rounded-xl object-contain shadow-2xl"
+            style={{ userSelect: "none" }}
+          />
+        </div>
+      );
+    }
+
+    /* ─── COMPONENTE: ImageGallery ─────────────────────
+       Carousel con thumbnails, swipe táctil y lightbox.
+       Acepta imágenes WebP; muestra placeholder si fallan.
+    ──────────────────────────────────────────────────── */
+    function ImageGallery({ images }) {
+      const [current,  setCurrent]  = React.useState(0);
+      const [imgError, setImgError] = React.useState({});
+      const [lightbox, setLightbox] = React.useState(false);
+      const touchStartX = React.useRef(null);
+
+      if (!images || images.length === 0) return null;
+
+      const prev = () => setCurrent(i => (i - 1 + images.length) % images.length);
+      const next = () => setCurrent(i => (i + 1) % images.length);
+
+      const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
+      const handleTouchEnd   = (e) => {
+        if (touchStartX.current === null) return;
+        const diff = touchStartX.current - e.changedTouches[0].clientX;
+        if (diff > 40) next(); else if (diff < -40) prev();
+        touchStartX.current = null;
+      };
+
+      const src      = images[current];
+      const hasError = imgError[current];
+
+      return (
+        <>
+          {lightbox && !hasError && (
+            <LightboxImage src={src} alt={"zoom-" + current} onClose={() => setLightbox(false)} />
+          )}
+          <div className="space-y-3">
+            {/* Imagen principal */}
+            <div
+              className="relative rounded-xl overflow-hidden bg-slate-900 border border-slate-800 select-none"
+              style={{ minHeight: "180px" }}
+              onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}
+            >
+              {hasError ? (
+                <div className="flex flex-col items-center justify-center h-48 text-slate-600 space-y-2">
+                  <i className="fa-solid fa-image text-3xl"></i>
+                  <span className="text-xs code-font">{src}</span>
+                </div>
+              ) : (
+                <img
+                  key={src} src={src} alt={"preview-" + current}
+                  onError={() => setImgError(prev => ({ ...prev, [current]: true }))}
+                  className="w-full object-contain max-h-72 mx-auto block cursor-zoom-in"
+                  onClick={() => setLightbox(true)}
+                />
+              )}
+              {!hasError && (
+                <button
+                  onClick={() => setLightbox(true)}
+                  className="absolute top-2 right-2 w-7 h-7 bg-slate-950/80 hover:bg-slate-900 border border-slate-700 rounded-lg flex items-center justify-center text-slate-300 hover:text-accentNeon transition"
+                  title="Ver en pantalla completa"
+                >
+                  <i className="fa-solid fa-magnifying-glass-plus text-xs"></i>
+                </button>
+              )}
+              {images.length > 1 && (
+                <>
+                  <button onClick={prev} className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-slate-950/80 hover:bg-slate-900 border border-slate-700 rounded-full flex items-center justify-center text-slate-300 hover:text-white transition">
+                    <i className="fa-solid fa-chevron-left text-xs"></i>
+                  </button>
+                  <button onClick={next} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-slate-950/80 hover:bg-slate-900 border border-slate-700 rounded-full flex items-center justify-center text-slate-300 hover:text-white transition">
+                    <i className="fa-solid fa-chevron-right text-xs"></i>
+                  </button>
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+                    {images.map((_, i) => (
+                      <button key={i} onClick={() => setCurrent(i)}
+                        className={"rounded-full transition-all " + (i === current ? "bg-accentNeon w-3 h-1.5" : "bg-slate-600 hover:bg-slate-400 w-1.5 h-1.5")}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+            {/* Thumbnails */}
+            {images.length > 1 && (
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {images.map((img, i) => {
+                  const err = imgError[i];
+                  return (
+                    <button key={i} onClick={() => setCurrent(i)}
+                      className={"flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition bg-slate-900 flex items-center justify-center " +
+                        (i === current ? "border-accentNeon" : "border-slate-800 hover:border-slate-600")}
+                    >
+                      {err
+                        ? <i className="fa-solid fa-image text-slate-600 text-xs"></i>
+                        : <img src={img} alt={"thumb-" + i} onError={() => setImgError(prev => ({ ...prev, [i]: true }))} className="w-full h-full object-cover" />
+                      }
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </>
+      );
+    }
+
+    /* ─── COMPONENTE PRINCIPAL: App ────────────────────
+       Contiene todo el layout del portafolio:
+       Header → Hero → Stats → Skills → Projects → Workflow → Contact → Modal
+    ──────────────────────────────────────────────────── */
+    function App() {
+      const [selectedProject, setSelectedProject] = useState(null);
+      const [activeCategory,  setActiveCategory]  = useState("All");
+      const [copiedEmail,     setCopiedEmail]      = useState(false);
+      const [formData,   setFormData]   = useState({ name: '', email: '', phone: '', message: '' });
+      const [formStatus, setFormStatus] = useState({ submitted: false, loading: false });
+
+      /* Copiar email al portapapeles */
+      const handleCopyEmail = () => {
+        navigator.clipboard.writeText("eduardozacaryvargasoyola@gmail.com");
+        setCopiedEmail(true);
+        setTimeout(() => setCopiedEmail(false), 2000);
+      };
+
+      /* Envío de formulario vía Formspree */
+      const handleFormSubmit = async (e) => {
+        e.preventDefault();
+        setFormStatus({ submitted: false, loading: true });
+        try {
+          const body = new FormData();
+          body.append("name",     formData.name);
+          body.append("email",    formData.email);
+          body.append("phone",    formData.phone || "No proporcionado");
+          body.append("message",  formData.message);
+          body.append("_replyto", formData.email);
+          body.append("_subject", "Nuevo contacto desde portafolio — " + formData.name);
+          const res = await fetch("https://formspree.io/f/xnjrbgon", {
+            method: "POST", headers: { "Accept": "application/json" }, body,
+          });
+          if (res.ok) {
+            setFormStatus({ submitted: true, loading: false });
+            setFormData({ name: '', email: '', phone: '', message: '' });
+          } else {
+            setFormStatus({ submitted: false, loading: false, error: true });
+          }
+        } catch {
+          setFormStatus({ submitted: false, loading: false, error: true });
+        }
+      };
+
+      /* Filtro de proyectos por categoría */
+      const filteredProjects = activeCategory === "All"
+        ? projectsData
+        : projectsData.filter(p => p.category === activeCategory);
+
+      return (
+        <div className="bg-darkBg min-h-screen text-slate-100 flex flex-col justify-between selection:bg-cyan-500 selection:text-slate-900">
+
+          {/* ══ HEADER ══════════════════════════════════ */}
+          <header className="sticky top-0 z-40 bg-darkBg/80 backdrop-blur-md border-b border-slate-800">
+            <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+              <a href="#hero" className="flex items-center space-x-2 group">
+                <span className="bg-gradient-to-r from-accentNeon to-accentPurple text-transparent bg-clip-text font-bold text-xl code-font">&lt;EV /&gt;</span>
+                <span className="text-slate-300 font-semibold text-sm tracking-wider uppercase group-hover:text-accentNeon transition-colors duration-300">Portafolio</span>
+              </a>
+              <nav className="hidden md:flex space-x-8 text-sm font-medium tracking-wide">
+                <a href="#habilidades" className="text-slate-400 hover:text-accentNeon transition-colors">Habilidades</a>
+                <a href="#proyectos"   className="text-slate-400 hover:text-accentNeon transition-colors">Proyectos</a>
+                <a href="#workflow"    className="text-slate-400 hover:text-accentNeon transition-colors">Filosofía</a>
+                <a href="#contacto"    className="text-slate-400 hover:text-accentNeon transition-colors">Contacto</a>
+              </nav>
+              <a href="#contacto" className="px-4 py-2 text-xs font-semibold uppercase tracking-widest border border-accentNeon/50 text-accentNeon hover:bg-accentNeon/10 rounded-md transition duration-300">
+                Contratar <i className="fa-solid fa-arrow-right ml-1"></i>
+              </a>
+            </div>
+          </header>
+
+          {/* ══ HERO ════════════════════════════════════ */}
+          <section id="hero" className="relative pt-12 pb-24 md:py-32 overflow-hidden max-w-6xl mx-auto px-6 w-full">
+            {/* Blobs decorativos de fondo */}
+            <div className="absolute top-1/4 -left-12 w-72 h-72 bg-accentNeon/10 rounded-full blur-3xl -z-10 animate-pulse"></div>
+            <div className="absolute bottom-10 right-0 w-96 h-96 bg-accentPurple/10 rounded-full blur-3xl -z-10"></div>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              <div className="lg:col-span-7 space-y-6">
+                <div className="inline-flex items-center space-x-2 bg-slate-900 border border-slate-800 px-3 py-1 rounded-full text-xs text-accentNeon">
+                  <span className="flex h-2 w-2 relative">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+                  </span>
+                  <span className="code-font font-semibold">Disponible para Proyectos de Software</span>
+                </div>
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
+                  Ingeniero <br />
+                  <span className="bg-gradient-to-r from-accentNeon via-indigo-400 to-accentPurple text-transparent bg-clip-text">de Software</span><br />
+                  Frontend.
+                </h1>
+                <p className="text-slate-400 text-lg max-w-xl leading-relaxed">
+                  Hola, soy <strong className="text-slate-200">Eduardo Zacary Vargas Oyola</strong>. Con <strong className="text-accentNeon">2 años de experiencia</strong> en desarrollo frontend, construyo interfaces web rápidas, limpias y escalables usando <strong className="text-accentNeon">React</strong>, <strong className="text-accentNeon">TypeScript</strong> y herramientas modernas de análisis de datos.
+                </p>
+                <div className="flex flex-wrap gap-4 pt-2">
+                  <a href="#proyectos" className="px-6 py-3 bg-gradient-to-r from-accentNeon to-cyan-600 text-slate-950 font-bold rounded-lg shadow-lg shadow-cyan-950/50 hover:opacity-90 hover:scale-[1.02] transition duration-300">Ver Proyectos</a>
+                  <a href="#contacto"  className="px-6 py-3 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 font-semibold rounded-lg hover:text-white transition duration-300">Contactar</a>
+                </div>
+              </div>
+              {/* Card decorativa de perfil con imagen */}
+              <div className="lg:col-span-5 flex justify-center">
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-accentNeon to-accentPurple rounded-3xl blur-md opacity-40 group-hover:opacity-60 transition duration-500"></div>
+                  <div className="relative bg-darkCard border border-slate-800 p-4 rounded-3xl w-72 sm:w-80">
+                    <div className="rounded-2xl w-full h-80 bg-slate-900 flex items-center justify-center border border-slate-800 overflow-hidden">
+                      <img src="assets/images/imageMe.webp" alt="Eduardo Zacary Vargas" className="w-full h-full object-cover" />
+                    </div>
+                    <div className="mt-4 flex items-center justify-between">
+                      <div>
+                        <h3 className="text-sm font-semibold text-slate-200">Eduardo Vargas</h3>
+                        <p className="text-xs text-slate-400 code-font">Software Engineer</p>
+                      </div>
+                      <div className="px-2.5 py-1 bg-slate-900 rounded-md border border-slate-800 text-[10px] code-font text-accentNeon font-bold uppercase">React + TS</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* ══ STATS ═══════════════════════════════════ */}
+          <section className="bg-slate-950/60 border-y border-slate-900/80 py-10">
+            <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
+              {[
+                { value: "2 Años",  label: "Experiencia",          color: "text-white" },
+                { value: "21",      label: "Años de Edad",         color: "text-accentNeon" },
+                { value: "4 Proy.", label: "Terminados",           color: "text-white" },
+                { value: "< 2s",   label: "Optimización de Carga", color: "text-accentPurple" },
+              ].map((stat, i) => (
+                <div key={i} className="text-center md:border-r border-slate-900 last:border-0">
+                  <div className={`text-3xl md:text-4xl font-extrabold code-font ${stat.color}`}>{stat.value}</div>
+                  <div className="text-xs text-slate-400 uppercase tracking-widest mt-1">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* ══ HABILIDADES ═════════════════════════════ */}
+          <section id="habilidades" className="py-24 max-w-6xl mx-auto px-6 w-full">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+              <div>
+                <p className="text-accentNeon text-xs font-semibold uppercase tracking-widest code-font mb-2">Stack Tecnológico</p>
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Capacidades de Ingeniería</h2>
+              </div>
+              <p className="text-slate-400 max-w-md text-sm mt-4 md:mt-0">Dominio del ecosistema frontend moderno combinado con herramientas de análisis y visualización de datos para soluciones completas.</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {skillsData.map((category, idx) => (
+                <div key={idx} className="bg-darkCard/50 border border-slate-900 p-6 rounded-2xl relative overflow-hidden group hover:border-slate-800 transition duration-300">
+                  <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-accentNeon to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                  <h3 className="text-lg font-bold mb-4 text-slate-200 code-font flex items-center justify-between">
+                    <span>{category.category}</span>
+                    <span className="text-xs text-accentNeon opacity-40">0{idx + 1}</span>
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {category.items.map((item, i) => (
+                      <span key={i} className="px-3 py-1.5 bg-slate-900/80 border border-slate-800 rounded-lg text-xs text-slate-300 tracking-wide">{item}</span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* ══ PROYECTOS ═══════════════════════════════ */}
+          <section id="proyectos" className="py-24 bg-slate-950/40 w-full border-t border-slate-900">
+            <div className="max-w-6xl mx-auto px-6">
+              <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div>
+                  <p className="text-accentNeon text-xs font-semibold uppercase tracking-widest code-font mb-2">Trabajo Real</p>
+                  <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Proyectos Terminados</h2>
+                </div>
+                {/* Filtros */}
+                <div className="flex flex-wrap gap-2 mt-6 md:mt-0">
+                  {categories.map((cat) => (
+                    <button key={cat} onClick={() => setActiveCategory(cat)}
+                      className={`px-4 py-1.5 rounded-lg text-xs font-semibold tracking-wide transition-all duration-300 ${
+                        activeCategory === cat
+                          ? "bg-accentNeon text-slate-950 shadow-md shadow-cyan-950"
+                          : "bg-slate-900 border border-slate-850 text-slate-400 hover:text-white"
+                      }`}
+                    >{cat === "All" ? "Todos" : cat}</button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Grid de tarjetas */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {filteredProjects.map((project) => (
+                  <div key={project.id} className="bg-darkCard border border-slate-900 rounded-2xl overflow-hidden flex flex-col justify-between group hover:border-slate-800 hover:-translate-y-1 transition duration-300">
+                    <div>
+                      {/* Imagen de portada — WebP */}
+                      <div className="relative h-40 w-full overflow-hidden bg-slate-900 flex items-center justify-center cursor-pointer" onClick={() => setSelectedProject(project)}>
+                        {project.images && project.images.length > 0 && (
+                          <img
+                            src={project.images[0]}
+                            alt={project.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                            onError={(e) => { e.target.style.display="none"; e.target.nextSibling.style.display="flex"; }}
+                          />
+                        )}
+                        {/* Fallback si no hay imagen */}
+                        <div className="text-center space-y-2 opacity-40 absolute inset-0 items-center justify-center"
+                          style={{ display: project.images && project.images.length > 0 ? "none" : "flex" }}>
+                          <i className={`fa-solid ${project.category === 'Analítica' ? 'fa-chart-bar' : 'fa-globe'} text-4xl text-accentNeon`}></i>
+                        </div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-darkCard to-transparent opacity-50 pointer-events-none"></div>
+                        <span className="absolute top-4 right-4 bg-slate-950/90 border border-slate-800 text-accentNeon text-[10px] code-font px-2 py-1 rounded">{project.category}</span>
+                        {project.demo && <span className="absolute top-4 left-4 bg-emerald-950/90 border border-emerald-800 text-emerald-400 text-[10px] code-font px-2 py-1 rounded">Live Demo</span>}
+                        {project.note && project.note.includes("BETA") && <span className="absolute top-4 left-4 bg-amber-950/90 border border-amber-800 text-amber-400 text-[10px] code-font px-2 py-1 rounded">BETA</span>}
+                      </div>
+                      {/* Contenido */}
+                      <div className="p-6 space-y-3">
+                        <h3 className="font-bold text-slate-100 text-base leading-snug">{project.title}</h3>
+                        <p className="text-slate-400 text-sm leading-relaxed">{project.shortDescription}</p>
+                        {project.note && <p className="text-[11px] text-amber-400/80 bg-amber-950/20 border border-amber-900/30 rounded-lg px-3 py-2 leading-relaxed">{project.note}</p>}
+                        <div className="flex flex-wrap gap-1.5 pt-1">
+                          {project.tags.slice(0, 4).map((tag, idx) => (
+                            <span key={idx} className="text-[10px] code-font text-slate-400 bg-slate-900 border border-slate-850 px-2 py-0.5 rounded">{tag}</span>
+                          ))}
+                          {project.tags.length > 4 && <span className="text-[10px] code-font text-accentNeon px-2 py-0.5 bg-cyan-950/20 rounded">+{project.tags.length - 4}</span>}
+                        </div>
+                      </div>
+                    </div>
+                    {/* Botones */}
+                    <div className="p-6 pt-0 flex gap-3 flex-wrap">
+                      <button onClick={() => setSelectedProject(project)} className="flex-1 text-center py-2 bg-slate-900 border border-slate-850 hover:border-slate-700 text-slate-200 hover:text-white rounded-lg text-xs font-semibold transition">Ver Detalles</button>
+                      {project.github    && <a href={project.github}    target="_blank" rel="noreferrer" className="px-3 py-2 bg-slate-900 border border-slate-850 hover:border-slate-700 text-slate-400 hover:text-accentNeon rounded-lg text-xs transition flex items-center justify-center gap-1"><i className="fa-brands fa-github text-base"></i></a>}
+                      {project.demo      && <a href={project.demo}      target="_blank" rel="noreferrer" className="px-3 py-2 bg-accentNeon/10 border border-accentNeon/30 hover:border-accentNeon/60 text-accentNeon rounded-lg text-xs transition flex items-center justify-center gap-1"><i className="fa-solid fa-arrow-up-right-from-square text-sm"></i></a>}
+                      {project.driveLink && <a href={project.driveLink} target="_blank" rel="noreferrer" className="px-3 py-2 bg-slate-900 border border-slate-850 hover:border-slate-700 text-slate-400 hover:text-accentNeon rounded-lg text-xs transition flex items-center justify-center gap-1"><i className="fa-brands fa-google-drive text-base"></i></a>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* ══ WORKFLOW / FILOSOFÍA ════════════════════ */}
+          <section id="workflow" className="py-24 max-w-6xl mx-auto px-6 w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              <div className="lg:col-span-5">
+                <span className="text-accentNeon text-xs font-semibold uppercase tracking-widest code-font">Estándares de Trabajo</span>
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight mt-2 mb-6">Enfoque de Desarrollo</h2>
+                <p className="text-slate-400 leading-relaxed text-sm mb-4">Más allá del código, me enfoco en soluciones que resuelven problemas reales: interfaces rápidas, datos claros y lógica robusta que cualquier equipo pueda mantener.</p>
+                <ul className="space-y-4 text-sm text-slate-300">
+                  <li className="flex items-start"><i className="fa-regular fa-square-check text-accentNeon mt-1 mr-3 text-base"></i><div><strong className="text-slate-200">Rendimiento Real:</strong> Optimización de carga bajo 2 segundos con código modular y prácticas modernas de performance.</div></li>
+                  <li className="flex items-start"><i className="fa-regular fa-square-check text-accentNeon mt-1 mr-3 text-base"></i><div><strong className="text-slate-200">Datos Accionables:</strong> Transformo bases de datos complejas en visualizaciones claras usando Excel, Power BI y Firebase.</div></li>
+                  <li className="flex items-start"><i className="fa-regular fa-square-check text-accentNeon mt-1 mr-3 text-base"></i><div><strong className="text-slate-200">UI Funcional &amp; Limpia:</strong> Componentes responsivos y accesibles con Tailwind CSS, CSS Grid y Flexbox.</div></li>
+                </ul>
+              </div>
+              {/* Bloque de código decorativo TypeScript */}
+              <div className="lg:col-span-7 bg-slate-950/80 border border-slate-900 rounded-3xl p-6 md:p-8 code-font text-xs text-slate-400 shadow-xl relative overflow-hidden">
+                <div className="absolute top-2 right-4 text-xs text-slate-600">ts / engineer-profile.ts</div>
+                <div className="flex items-center space-x-2 border-b border-slate-900 pb-4 mb-4">
+                  <div className="w-3 h-3 bg-rose-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-amber-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
+                </div>
+                <pre className="overflow-x-auto whitespace-pre-wrap">{`interface EngineerProfile {
+  name: string;
+  age: number;
+  birthDate: string;
+  experience: string;
+  loadOptimization: string;
+}
+ 
+export class SoftwareEngineer {
+  constructor(
+    private readonly name: string = "Eduardo Zacary Vargas Oyola",
+    private readonly coreSkill: string = "React + TypeScript + Firebase"
+  ) {}
+ 
+  public getProfile(): EngineerProfile {
+    return {
+      name: this.name,
+      age: 21,
+      birthDate: "2004-10-20",
+      experience: "2 años",
+      loadOptimization: "< 2s",
+    };
+  }
+ 
+  public async buildSolution(project: string): Promise<string> {
+    const loadTime = await this.measurePaintTime();
+    return \`\${project} entregado en \${loadTime}ms\`;
+  }
+ 
+  private measurePaintTime(): Promise<number> {
+    return Promise.resolve(Math.floor(Math.random() * 500) + 800);
+  }
+}
+ 
+const eduardo = new SoftwareEngineer();`}</pre>
+              </div>
+            </div>
+          </section>
+
+          {/* ══ CONTACTO ════════════════════════════════ */}
+          <section id="contacto" className="py-24 bg-slate-950/60 w-full border-t border-slate-900">
+            <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12">
+              {/* Info */}
+              <div className="lg:col-span-5 space-y-6">
+                <span className="text-accentPurple text-xs font-semibold uppercase tracking-widest code-font">¿Interesado en trabajar juntos?</span>
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Hablemos de tu Proyecto</h2>
+                <p className="text-slate-400 text-sm leading-relaxed">Estoy disponible para proyectos freelance, colaboraciones y oportunidades de trabajo. Si necesitas un frontend sólido o análisis de datos, escríbeme.</p>
+                <div className="space-y-4 pt-4">
+                  <div className="flex items-center space-x-3 text-sm">
+                    <div className="w-10 h-10 bg-slate-900 border border-slate-800 rounded-lg flex items-center justify-center text-accentNeon"><i className="fa-solid fa-envelope"></i></div>
+                    <div>
+                      <div className="text-xs text-slate-500 uppercase tracking-widest font-semibold">Correo de Contacto</div>
+                      <button onClick={handleCopyEmail} className="text-slate-200 hover:text-accentNeon font-medium transition flex items-center gap-2">
+                        eduardozacaryvargasoyola@gmail.com
+                        {copiedEmail ? <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded">¡Copiado!</span> : <i className="fa-regular fa-copy text-slate-500 hover:text-slate-300 text-xs"></i>}
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3 text-sm">
+                    <div className="w-10 h-10 bg-slate-900 border border-slate-800 rounded-lg flex items-center justify-center text-accentPurple"><i className="fa-brands fa-github"></i></div>
+                    <div>
+                      <div className="text-xs text-slate-500 uppercase tracking-widest font-semibold">GitHub</div>
+                      <a href="https://github.com/Zacaryx" target="_blank" rel="noreferrer" className="text-slate-200 hover:text-accentNeon font-medium transition">github.com/Zacaryx</a>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3 text-sm">
+                    <div className="w-10 h-10 bg-slate-900 border border-slate-800 rounded-lg flex items-center justify-center text-emerald-400"><i className="fa-brands fa-whatsapp"></i></div>
+                    <div>
+                      <div className="text-xs text-slate-500 uppercase tracking-widest font-semibold">WhatsApp</div>
+                      <a href="https://wa.me/51967613400?text=Hola%20Eduardo%2C%20vi%20tu%20portafolio%20y%20me%20interesa%20contactarte." target="_blank" rel="noreferrer" className="text-slate-200 hover:text-emerald-400 font-medium transition flex items-center gap-2">
+                        +51 967 613 400 <span className="text-[10px] bg-emerald-950/40 text-emerald-400 border border-emerald-900/40 px-1.5 py-0.5 rounded">Abrir chat</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3 text-sm">
+                    <div className="w-10 h-10 bg-slate-900 border border-slate-800 rounded-lg flex items-center justify-center text-accentPurple"><i className="fa-solid fa-location-dot"></i></div>
+                    <div>
+                      <div className="text-xs text-slate-500 uppercase tracking-widest font-semibold">Ubicación</div>
+                      <div className="text-slate-200 font-medium">Lima, Perú — Disponible para remoto global</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Formulario */}
+              <div className="lg:col-span-7 bg-darkCard border border-slate-900 p-8 rounded-2xl relative">
+                <h3 className="text-xl font-bold mb-6 text-slate-200">Envíame un mensaje directo</h3>
+                {formStatus.submitted ? (
+                  <div className="bg-cyan-950/20 border border-cyan-800/50 p-6 rounded-xl text-center space-y-3">
+                    <div className="w-12 h-12 bg-cyan-900/50 rounded-full flex items-center justify-center text-cyan-400 mx-auto text-xl"><i className="fa-solid fa-circle-check"></i></div>
+                    <h4 className="font-bold text-slate-200 text-lg">¡Mensaje enviado!</h4>
+                    <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">Gracias por contactarme. Te responderé lo antes posible.</p>
+                    <button onClick={() => setFormStatus({ submitted: false, loading: false })} className="mt-2 text-xs font-semibold text-accentNeon hover:underline">Enviar otro mensaje</button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleFormSubmit} className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2">Tu Nombre <span className="text-accentNeon">*</span></label>
+                        <input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="Ej: Juan Pérez" className="w-full bg-slate-900/50 border border-slate-700 focus:border-accentNeon focus:outline-none focus:ring-1 focus:ring-accentNeon rounded-lg px-4 py-2.5 text-sm transition" />
+                      </div>
+                      <div>
+                        <label className="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2">Teléfono <span className="text-slate-600 normal-case">(opcional)</span></label>
+                        <input type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} placeholder="Ej: +51 999 888 777" className="w-full bg-slate-900/50 border border-slate-700 focus:border-accentNeon focus:outline-none focus:ring-1 focus:ring-accentNeon rounded-lg px-4 py-2.5 text-sm transition" />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2">Tu Correo Electrónico <span className="text-accentNeon">*</span></label>
+                      <input type="email" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="correo@ejemplo.com" className="w-full bg-slate-900/50 border border-slate-700 focus:border-accentNeon focus:outline-none focus:ring-1 focus:ring-accentNeon rounded-lg px-4 py-2.5 text-sm transition" />
+                    </div>
+                    <div>
+                      <label className="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2">Mensaje <span className="text-accentNeon">*</span></label>
+                      <textarea rows="4" required value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} placeholder="Cuéntame sobre tu proyecto..." className="w-full bg-slate-900/50 border border-slate-700 focus:border-accentNeon focus:outline-none focus:ring-1 focus:ring-accentNeon rounded-lg px-4 py-2.5 text-sm transition"></textarea>
+                    </div>
+                    {formStatus.error && <p className="text-xs text-rose-400 bg-rose-950/20 border border-rose-900/30 rounded-lg px-3 py-2"><i className="fa-solid fa-triangle-exclamation mr-1"></i> Hubo un error al enviar. Intenta de nuevo.</p>}
+                    <button type="submit" disabled={formStatus.loading} className="w-full py-3 bg-gradient-to-r from-accentNeon to-accentPurple text-slate-950 hover:opacity-95 font-bold uppercase tracking-wider text-xs rounded-lg transition duration-300 flex items-center justify-center gap-2 shadow-md shadow-slate-950 disabled:opacity-60">
+                      {formStatus.loading ? <><i className="fa-solid fa-spinner animate-spin"></i> Enviando...</> : <>Enviar Mensaje <i className="fa-solid fa-paper-plane"></i></>}
+                    </button>
+                  </form>
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* ══ MODAL DE PROYECTO ════════════════════════ */}
+          {selectedProject && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm" onClick={() => setSelectedProject(null)}>
+              <div className="bg-darkCard border border-slate-800 rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl relative max-h-[90vh] flex flex-col justify-between" onClick={(e) => e.stopPropagation()}>
+                <div className="p-6 border-b border-slate-900 flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] code-font uppercase text-accentNeon font-semibold tracking-widest">{selectedProject.category}</span>
+                    <h3 className="text-2xl font-extrabold text-white mt-1">{selectedProject.title}</h3>
+                  </div>
+                  <button onClick={() => setSelectedProject(null)} className="w-10 h-10 bg-slate-900 hover:bg-slate-850 text-slate-400 hover:text-white rounded-full flex items-center justify-center transition">
+                    <i className="fa-solid fa-xmark text-lg"></i>
+                  </button>
+                </div>
+                <div className="p-6 overflow-y-auto space-y-6">
+                  {/* Galería completa de imágenes del proyecto */}
+                  {selectedProject.images && selectedProject.images.length > 0 && <ImageGallery images={selectedProject.images} />}
+                  <div>
+                    <h4 className="text-sm font-semibold uppercase text-slate-400 tracking-wider mb-2">Descripción del Proyecto</h4>
+                    <p className="text-slate-300 text-sm leading-relaxed">{selectedProject.fullDescription}</p>
+                  </div>
+                  {selectedProject.note && (
+                    <div className="bg-amber-950/20 border border-amber-900/40 rounded-xl p-4">
+                      <p className="text-xs text-amber-400 leading-relaxed">{selectedProject.note}</p>
+                    </div>
+                  )}
+                  <div>
+                    <h4 className="text-sm font-semibold uppercase text-slate-400 tracking-wider mb-2">Tecnologías Utilizadas</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedProject.tags.map((tag, idx) => (
+                        <span key={idx} className="px-3 py-1 bg-slate-900 border border-slate-800 text-slate-300 code-font text-xs rounded-lg">{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="p-6 border-t border-slate-900 bg-slate-950/50 flex gap-4 flex-wrap">
+                  {selectedProject.github    && <a href={selectedProject.github}    target="_blank" rel="noreferrer" className="flex-1 py-3 text-center bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 font-semibold rounded-xl text-xs uppercase tracking-wider transition duration-300 flex items-center justify-center gap-2"><i className="fa-brands fa-github text-sm"></i> Ver en GitHub</a>}
+                  {selectedProject.driveLink && <a href={selectedProject.driveLink} target="_blank" rel="noreferrer" className="flex-1 py-3 text-center bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 font-semibold rounded-xl text-xs uppercase tracking-wider transition duration-300 flex items-center justify-center gap-2"><i className="fa-brands fa-google-drive text-sm"></i> {selectedProject.driveLinkLabel}</a>}
+                  {selectedProject.demo      && <a href={selectedProject.demo}      target="_blank" rel="noreferrer" className="flex-1 py-3 text-center bg-gradient-to-r from-accentNeon to-cyan-600 text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition duration-300 flex items-center justify-center gap-2 shadow-md shadow-cyan-950/20">Demo en Vivo <i className="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>}
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+      );
+    }
+
+    /* Montaje de React */
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(App));
+  </script>
+
+</body>
+</html>
