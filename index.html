@@ -401,9 +401,15 @@ function WebpImage({ src, alt, className, onError, onClick, style }) {
                 <a href="#workflow"    className="text-slate-400 hover:text-accentNeon transition-colors">Filosofía</a>
                 <a href="#contacto"    className="text-slate-400 hover:text-accentNeon transition-colors">Contacto</a>
               </nav>
-              <a href="#contacto" className="px-4 py-2 text-xs font-semibold uppercase tracking-widest border border-accentNeon/50 text-accentNeon hover:bg-accentNeon/10 rounded-md transition duration-300">
-                Contratar <i className="fa-solid fa-arrow-right ml-1"></i>
-              </a>
+              <div className="flex items-center gap-3">
+                <a href="https://github.com/Zacaryx/portafolio_V3" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-accentNeon transition-colors text-sm px-3 py-2 border border-slate-800 rounded-md flex items-center gap-2">
+                  <i className="fa-brands fa-github text-base"></i>
+                  Repo
+                </a>
+                <a href="#contacto" className="px-4 py-2 text-xs font-semibold uppercase tracking-widest border border-accentNeon/50 text-accentNeon hover:bg-accentNeon/10 rounded-md transition duration-300">
+                  Contratar <i className="fa-solid fa-arrow-right ml-1"></i>
+                </a>
+              </div>
             </div>
           </header>
 
