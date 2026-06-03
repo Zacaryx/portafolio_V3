@@ -20,10 +20,11 @@ const QUALITY    = 85;        // calidad WebP (0-100)
 const SUPPORTED = ['.png', '.jpg', '.jpeg', '.gif', '.tiff', '.bmp', '.avif'];
 
 async function convertImage(filePath) {
-  const ext  = path.extname(filePath).toLowerCase();
-  const base = path.basename(filePath, ext);
-  const dir  = path.dirname(filePath);
-  const out  = path.join(dir, base + '.webp');
+  const actualExt = path.extname(filePath);
+  const ext       = actualExt.toLowerCase();
+  const base      = path.basename(filePath, actualExt);
+  const dir       = path.dirname(filePath);
+  const out       = path.join(dir, base + '.webp');
 
   // Evita reconvertir si el .webp ya existe y es más reciente
   if (fs.existsSync(out)) {
@@ -73,7 +74,7 @@ async function run() {
   }
 
   console.log('\n¡Conversión completada!');
-  console.log('Recuerda: el script ya actualizó las rutas a .webp en index.html.');
+  console.log('Recuerda: el script genera archivos .webp en assets/images/.');
 }
 
 run();
