@@ -65,292 +65,26 @@
       =====================================================
       PORTAFOLIO — Eduardo Vargas
       Stack: React 18 (UMD) + Babel standalone + Tailwind
-      i18n: Detección de país vía ipapi.co → ES / EN
       =====================================================
     */
 
-    const { useState, useEffect } = React;
+    const { useState } = React;
 
-    /* ─── TRADUCCIONES ──────────────────────────────── */
-    const translations = {
-      es: {
-        // Nav
-        nav_skills: "Habilidades",
-        nav_projects: "Proyectos",
-        nav_philosophy: "Filosofía",
-        nav_contact: "Contacto",
-        nav_repo: "Repo",
-        nav_hire: "Contratar",
-        // Hero
-        hero_badge: "Disponible para Proyectos de Software",
-        hero_title1: "Ingeniero",
-        hero_title2: "de Software",
-        hero_title3: "Frontend.",
-        hero_desc: "Hola, soy <strong class='text-slate-200'>Eduardo Zacary Vargas Oyola</strong>. Con <strong class='text-accentNeon'>2 años de experiencia</strong> en desarrollo frontend, construyo interfaces web rápidas, limpias y escalables usando <strong class='text-accentNeon'>React</strong>, <strong class='text-accentNeon'>TypeScript</strong> y herramientas modernas de análisis de datos.",
-        hero_btn_projects: "Ver Proyectos",
-        hero_btn_contact: "Contactar",
-        // Stats
-        stat_exp_val: "2 Años",
-        stat_exp_label: "Experiencia",
-        stat_age_label: "Años de Edad",
-        stat_proj_val: "4 Proy.",
-        stat_proj_label: "Terminados",
-        stat_perf_label: "Optimización de Carga",
-        // Skills
-        skills_tag: "Stack Tecnológico",
-        skills_title: "Capacidades de Ingeniería",
-        skills_desc: "Dominio del ecosistema frontend moderno combinado con herramientas de análisis y visualización de datos para soluciones completas.",
-        // Projects
-        proj_tag: "Trabajo Real",
-        proj_title: "Proyectos Terminados",
-        proj_filter_all: "Todos",
-        proj_btn_details: "Ver Detalles",
-        // Workflow
-        work_tag: "Estándares de Trabajo",
-        work_title: "Enfoque de Desarrollo",
-        work_desc: "Más allá del código, me enfoco en soluciones que resuelven problemas reales: interfaces rápidas, datos claros y lógica robusta que cualquier equipo pueda mantener.",
-        work_p1_title: "Rendimiento Real:",
-        work_p1: "Optimización de carga bajo 2 segundos con código modular y prácticas modernas de performance.",
-        work_p2_title: "Datos Accionables:",
-        work_p2: "Transformo bases de datos complejas en visualizaciones claras usando Excel, Power BI y Firebase.",
-        work_p3_title: "UI Funcional & Limpia:",
-        work_p3: "Componentes responsivos y accesibles con Tailwind CSS, CSS Grid y Flexbox.",
-        // Contact
-        contact_tag: "¿Interesado en trabajar juntos?",
-        contact_title: "Hablemos de tu Proyecto",
-        contact_desc: "Estoy disponible para proyectos freelance, colaboraciones y oportunidades de trabajo. Si necesitas un frontend sólido o análisis de datos, escríbeme.",
-        contact_email_label: "Correo de Contacto",
-        contact_wa_label: "WhatsApp",
-        contact_wa_link: "https://wa.me/51967613400?text=Hola%20Eduardo%2C%20vi%20tu%20portafolio%20y%20me%20interesa%20contactarte.",
-        contact_wa_cta: "Abrir chat",
-        contact_location_label: "Ubicación",
-        contact_location: "Lima, Perú — Disponible para remoto global",
-        contact_form_title: "Envíame un mensaje directo",
-        form_success_title: "¡Mensaje enviado!",
-        form_success_desc: "Gracias por contactarme. Te responderé lo antes posible.",
-        form_send_other: "Enviar otro mensaje",
-        form_name_label: "Tu Nombre",
-        form_name_ph: "Ej: Juan Pérez",
-        form_phone_label: "Teléfono",
-        form_phone_opt: "(opcional)",
-        form_phone_ph: "Ej: +51 999 888 777",
-        form_email_label: "Tu Correo Electrónico",
-        form_email_ph: "correo@ejemplo.com",
-        form_msg_label: "Mensaje",
-        form_msg_ph: "Cuéntame sobre tu proyecto...",
-        form_error: "Hubo un error al enviar. Intenta de nuevo.",
-        form_sending: "Enviando...",
-        form_submit: "Enviar Mensaje",
-        // Modal
-        modal_desc_label: "Descripción del Proyecto",
-        modal_tech_label: "Tecnologías Utilizadas",
-        modal_github: "Ver en GitHub",
-        modal_demo: "Demo en Vivo",
-        // Footer
-        footer_copy: "Eduardo Zacary Vargas Oyola",
-        footer_built: "Construido con React + Tailwind",
-        // Copied
-        copied: "¡Copiado!",
-        // Project data
-        proj_data: [
-          {
-            id: 1,
-            title: "Aqua Ingenieros — Portal Web",
-            category: "Web Frontend",
-            shortDescription: "Sitio web corporativo para consultoría e ingeniería.",
-            fullDescription: "Portal web desarrollado para Aqua Ingenieros. Presenta servicios, portfolio y contacto. Optimizado y responsive.",
-            note: null,
-          },
-          {
-            id: 2,
-            title: "Portafolio V3 — Código Libre",
-            category: "Web Frontend",
-            shortDescription: "Versión abierta de este mismo portafolio (código libre).",
-            fullDescription: "Código abierto del portafolio; útil como referencia de estructura y componentes.",
-            note: "📂 ¡Estás viendo esta página ahora! Es el mismo portafolio disponible como código open source en GitHub.",
-          },
-          {
-            id: 3,
-            title: "Excel VBA Macro — Balance Financiero",
-            category: "Analítica",
-            shortDescription: "Macro VBA para automatizar cálculos en el historial de balance financiero de cuentas corrientes y flujos de caja.",
-            fullDescription: "Desarrollé una solución robusta en VBA (Macros) diseñada para optimizar el control de cuentas corrientes y flujos de caja. El cliente necesitaba procesar una base de datos de tamaño variable donde los registros desorganizados impedían ver el saldo real de la cuenta en fechas específicas. Desafíos resueltos: Gestión Dinámica de Datos — la herramienta identifica automáticamente el fin de la tabla (sin importar si hay 100 o 100.000 registros). Ordenamiento Lógico — limpieza y ordenamiento automático por Fecha y Número de Orden, asegurando que el historial sea cronológicamente preciso. Cálculo de Saldo Acumulado — implementé un algoritmo que calcula el saldo fila por fila, permitiendo visualizar cómo cada compra y pago afectó el saldo en ese momento exacto.",
-            note: "⚠️ Dar permisos para macros VBA y abrir directamente en el computador, no en la nube.",
-          },
-          {
-            id: 4,
-            title: "Dashboard Power BI — Analítica Empresarial",
-            category: "Analítica",
-            shortDescription: "Dashboard interactivo en Power BI para visualización y análisis de datos empresariales.",
-            fullDescription: "Dashboard desarrollado en Power BI para la visualización avanzada de datos empresariales. Permite analizar métricas clave, tendencias y KPIs de forma interactiva, facilitando la toma de decisiones basada en datos reales.",
-            note: null,
-          },
-          {
-            id: 5,
-            title: "Café Andino — Landing Page",
-            category: "Web Frontend",
-            shortDescription: "Página web para cafetería usando Bootstrap. Proyecto BETA en desarrollo.",
-            fullDescription: "Landing page diseñada para Café Andino utilizando Bootstrap como framework CSS principal. Proyecto en estado BETA, sin terminar, que contempla secciones de menú, historia del café, ubicación y contacto.",
-            note: "🚧 Página estática, sin backend",
-          },
-          {
-            id: 6,
-            title: "AppWebForBusiness Beta v2",
-            category: "Web Frontend",
-            shortDescription: "App web para minimarkets: registro de productos, análisis, ventas y gestión interna. Segunda versión con mejor lógica de backend.",
-            fullDescription: "Aplicación web enfocada a minimarkets para el registro de productos, análisis de productos, ventas y gestión interna. Desarrollada con HTML, CSS, JavaScript y Google Firebase como backend. Esta es la segunda versión (BetaV2) con una lógica de backend significativamente mejorada respecto a la primera versión.",
-            note: "🔐 Ingresar con usuario: Zacaryx y contraseña: 123456. Proyecto BETA sin terminar",
-          },
-        ],
-        skill_categories: [
-          { category: "Frontend", items: ["React", "TypeScript", "JavaScript", "Node.js", "Tailwind CSS", "CSS Grid", "Flexbox"] },
-          { category: "Visualización & Datos", items: ["Excel Avanzado", "SQL Server Management", "Google Firebase", "Power BI"] },
-          { category: "Tooling & Cloud", items: ["Git & GitHub", "Webpack"] },
-        ],
-        filter_labels: { "All": "Todos", "Analítica": "Analítica", "Web Frontend": "Web Frontend" },
-      },
-      en: {
-        // Nav
-        nav_skills: "Skills",
-        nav_projects: "Projects",
-        nav_philosophy: "Philosophy",
-        nav_contact: "Contact",
-        nav_repo: "Repo",
-        nav_hire: "Hire Me",
-        // Hero
-        hero_badge: "Available for Software Projects",
-        hero_title1: "Software",
-        hero_title2: "Frontend",
-        hero_title3: "Engineer.",
-        hero_desc: "Hi, I'm <strong class='text-slate-200'>Eduardo Zacary Vargas Oyola</strong>. With <strong class='text-accentNeon'>2 years of experience</strong> in frontend development, I build fast, clean, and scalable web interfaces using <strong class='text-accentNeon'>React</strong>, <strong class='text-accentNeon'>TypeScript</strong>, and modern data analysis tools.",
-        hero_btn_projects: "View Projects",
-        hero_btn_contact: "Contact",
-        // Stats
-        stat_exp_val: "2 Yrs",
-        stat_exp_label: "Experience",
-        stat_age_label: "Years Old",
-        stat_proj_val: "4 Proj.",
-        stat_proj_label: "Completed",
-        stat_perf_label: "Load Optimization",
-        // Skills
-        skills_tag: "Tech Stack",
-        skills_title: "Engineering Capabilities",
-        skills_desc: "Mastery of the modern frontend ecosystem combined with data analysis and visualization tools for complete solutions.",
-        // Projects
-        proj_tag: "Real Work",
-        proj_title: "Completed Projects",
-        proj_filter_all: "All",
-        proj_btn_details: "View Details",
-        // Workflow
-        work_tag: "Work Standards",
-        work_title: "Development Approach",
-        work_desc: "Beyond code, I focus on solutions that solve real problems: fast interfaces, clear data, and robust logic that any team can maintain.",
-        work_p1_title: "Real Performance:",
-        work_p1: "Load optimization under 2 seconds with modular code and modern performance practices.",
-        work_p2_title: "Actionable Data:",
-        work_p2: "I transform complex databases into clear visualizations using Excel, Power BI, and Firebase.",
-        work_p3_title: "Functional & Clean UI:",
-        work_p3: "Responsive and accessible components with Tailwind CSS, CSS Grid, and Flexbox.",
-        // Contact
-        contact_tag: "Interested in working together?",
-        contact_title: "Let's Talk About Your Project",
-        contact_desc: "I'm available for freelance projects, collaborations, and job opportunities. If you need a solid frontend or data analysis, reach out.",
-        contact_email_label: "Contact Email",
-        contact_wa_label: "WhatsApp",
-        contact_wa_link: "https://wa.me/51967613400?text=Hello%20Eduardo%2C%20I%20saw%20your%20portfolio%20and%20would%20like%20to%20get%20in%20touch.",
-        contact_wa_cta: "Open chat",
-        contact_location_label: "Location",
-        contact_location: "Lima, Peru — Available for global remote",
-        contact_form_title: "Send me a direct message",
-        form_success_title: "Message sent!",
-        form_success_desc: "Thanks for reaching out. I'll get back to you as soon as possible.",
-        form_send_other: "Send another message",
-        form_name_label: "Your Name",
-        form_name_ph: "E.g.: John Doe",
-        form_phone_label: "Phone",
-        form_phone_opt: "(optional)",
-        form_phone_ph: "E.g.: +1 999 888 777",
-        form_email_label: "Your Email Address",
-        form_email_ph: "email@example.com",
-        form_msg_label: "Message",
-        form_msg_ph: "Tell me about your project...",
-        form_error: "There was an error sending. Please try again.",
-        form_sending: "Sending...",
-        form_submit: "Send Message",
-        // Modal
-        modal_desc_label: "Project Description",
-        modal_tech_label: "Technologies Used",
-        modal_github: "View on GitHub",
-        modal_demo: "Live Demo",
-        // Footer
-        footer_copy: "Eduardo Zacary Vargas Oyola",
-        footer_built: "Built with React + Tailwind",
-        // Copied
-        copied: "Copied!",
-        // Project data
-        proj_data: [
-          {
-            id: 1,
-            title: "Aqua Ingenieros — Web Portal",
-            category: "Web Frontend",
-            shortDescription: "Corporate website for consulting and engineering firm.",
-            fullDescription: "Web portal developed for Aqua Ingenieros. Features services, portfolio, and contact sections. Optimized and responsive.",
-            note: null,
-          },
-          {
-            id: 2,
-            title: "Portfolio V3 — Open Source",
-            category: "Web Frontend",
-            shortDescription: "Open version of this very portfolio (free code).",
-            fullDescription: "Open-source portfolio code; useful as a structural and component reference.",
-            note: "📂 You're viewing this page right now! It's the same portfolio available as open source code on GitHub.",
-          },
-          {
-            id: 3,
-            title: "Excel VBA Macro — Financial Balance",
-            category: "Analítica",
-            shortDescription: "VBA macro to automate calculations in financial balance history for current accounts and cash flows.",
-            fullDescription: "I developed a robust VBA (Macros) solution designed to optimize current account and cash flow control. The client needed to process a variable-size database where disorganized records made it impossible to see the real account balance at specific dates. Challenges solved: Dynamic Data Management — the tool automatically identifies the end of the table (regardless of whether there are 100 or 100,000 records). Logical Sorting — automatic cleaning and sorting by Date and Order Number, ensuring the history is chronologically accurate. Cumulative Balance Calculation — I implemented an algorithm that calculates the balance row by row, allowing you to visualize how each purchase and payment affected the balance at that exact moment.",
-            note: "⚠️ Enable VBA macro permissions and open directly on your computer, not in the cloud.",
-          },
-          {
-            id: 4,
-            title: "Power BI Dashboard — Business Analytics",
-            category: "Analítica",
-            shortDescription: "Interactive Power BI dashboard for business data visualization and analysis.",
-            fullDescription: "Dashboard developed in Power BI for advanced business data visualization. Allows interactive analysis of key metrics, trends, and KPIs, facilitating data-driven decision making.",
-            note: null,
-          },
-          {
-            id: 5,
-            title: "Café Andino — Landing Page",
-            category: "Web Frontend",
-            shortDescription: "Coffee shop website using Bootstrap. BETA project in development.",
-            fullDescription: "Landing page designed for Café Andino using Bootstrap as the main CSS framework. BETA project, unfinished, featuring menu, coffee history, location, and contact sections.",
-            note: "🚧 Static page, no backend",
-          },
-          {
-            id: 6,
-            title: "AppWebForBusiness Beta v2",
-            category: "Web Frontend",
-            shortDescription: "Web app for mini-markets: product registration, analytics, sales, and internal management. Second version with improved backend logic.",
-            fullDescription: "Web application focused on mini-markets for product registration, product analytics, sales, and internal management. Built with HTML, CSS, JavaScript, and Google Firebase as the backend. This is the second version (BetaV2) with significantly improved backend logic compared to the first version.",
-            note: "🔐 Login with username: Zacaryx and password: 123456. Unfinished BETA project",
-          },
-        ],
-        skill_categories: [
-          { category: "Frontend", items: ["React", "TypeScript", "JavaScript", "Node.js", "Tailwind CSS", "CSS Grid", "Flexbox"] },
-          { category: "Visualization & Data", items: ["Advanced Excel", "SQL Server Management", "Google Firebase", "Power BI"] },
-          { category: "Tooling & Cloud", items: ["Git & GitHub", "Webpack"] },
-        ],
-        filter_labels: { "All": "All", "Analítica": "Analytics", "Web Frontend": "Web Frontend" },
-      },
-    };
-
-    /* ─── DATOS ESTÁTICOS (imágenes, links — no traducibles) ─ */
-    const projectsMeta = [
+    /*
+      ─── DATOS: Proyectos ───────────────────────────────
+      Imágenes referenciadas en WebP.
+      Antes de subir al repo, ejecuta:
+        node convert-to-webp.js
+      Ese script convierte los PNG originales a WebP y los
+      deja en la misma carpeta assets/images/.
+    */
+    const projectsData = [
       {
         id: 1,
+        title: "Aqua Ingenieros — Portal Web",
+        category: "Web Frontend",
+        shortDescription: "Sitio web corporativo para consultoría e ingeniería.",
+        fullDescription: "Portal web desarrollado para Aqua Ingenieros. Presenta servicios, portfolio y contacto. Optimizado y responsive.",
         images: [
           "assets/images/aquaingenierosv1.1.PNG.webp",
           "assets/images/aquaingenierosv1.2.PNG.webp",
@@ -359,21 +93,32 @@
         tags: ["HTML", "CSS", "Web"],
         driveLink: null,
         driveLinkLabel: null,
+        note: null,
         github: "https://github.com/Zacaryx/aquaingenierosv4",
         demo: "https://aquaingenieros.com",
       },
       {
         id: 2,
+        title: "Portafolio V3 — Código Libre",
+        category: "Web Frontend",
+        shortDescription: "Versión abierta de este mismo portafolio (código libre).",
+        fullDescription: "Código abierto del portafolio; útil como referencia de estructura y componentes.",
         images: [],
         tags: ["React", "Open Source"],
         driveLink: null,
         driveLinkLabel: null,
+        note: "📂 ¡Estás viendo esta página ahora! Es el mismo portafolio disponible como código open source en GitHub.",
         github: "https://github.com/Zacaryx/portafolio_V3",
         demo: "https://portafolio-v3.vercel.app",
       },
       {
         id: 3,
+        title: "Excel VBA Macro — Balance Financiero",
+        category: "Analítica",
+        shortDescription: "Macro VBA para automatizar cálculos en el historial de balance financiero de cuentas corrientes y flujos de caja.",
+        fullDescription: "Desarrollé una solución robusta en VBA (Macros) diseñada para optimizar el control de cuentas corrientes y flujos de caja. El cliente necesitaba procesar una base de datos de tamaño variable donde los registros desorganizados impedían ver el saldo real de la cuenta en fechas específicas. Desafíos resueltos: Gestión Dinámica de Datos — la herramienta identifica automáticamente el fin de la tabla (sin importar si hay 100 o 100.000 registros). Ordenamiento Lógico — limpieza y ordenamiento automático por Fecha y Número de Orden, asegurando que el historial sea cronológicamente preciso. Cálculo de Saldo Acumulado — implementé un algoritmo que calcula el saldo fila por fila, permitiendo visualizar cómo cada compra y pago afectó el saldo en ese momento exacto.",
         images: [
+          /* Excel — versión 1 y 2 */
           "assets/images/excelv1.1.PNG",
           "assets/images/excelv1.2.PNG",
           "assets/images/excelv2.1.PNG",
@@ -383,25 +128,37 @@
         ],
         tags: ["Excel", "VBA", "Macros", "Finanzas", "Automatización"],
         driveLink: "https://drive.google.com/drive/folders/1QiF0s5RCBvbZUc_FfXJEyHYmIZOIgcbl?usp=sharing",
-        driveLinkLabel: { es: "Ver Carpeta en Drive", en: "View Folder on Drive" },
+        driveLinkLabel: "Ver Carpeta en Drive",
+        note: "⚠️ Dar permisos para macros VBA y abrir directamente en el computador, no en la nube.",
         github: null,
         demo: null,
       },
       {
-        id: 4,
+        id: 2,
+        title: "Dashboard Power BI — Analítica Empresarial",
+        category: "Analítica",
+        shortDescription: "Dashboard interactivo en Power BI para visualización y análisis de datos empresariales.",
+        fullDescription: "Dashboard desarrollado en Power BI para la visualización avanzada de datos empresariales. Permite analizar métricas clave, tendencias y KPIs de forma interactiva, facilitando la toma de decisiones basada en datos reales.",
         images: [
+          /* Power BI */
           "assets/images/powerbiv1.1.PNG",
           "assets/images/powerbiv1.2.PNG",
         ],
         tags: ["Power BI", "SQL Server", "Analítica", "Visualización de Datos", "KPIs"],
         driveLink: "https://drive.google.com/file/d/1LhKbY_Z354dColyMNAJGmI_KFY4P-I3H/view?usp=sharing",
-        driveLinkLabel: { es: "Ver Dashboard en Drive", en: "View Dashboard on Drive" },
+        driveLinkLabel: "Ver Dashboard en Drive",
+        note: null,
         github: null,
         demo: null,
       },
       {
-        id: 5,
+        id: 3,
+        title: "Café Andino — Landing Page",
+        category: "Web Frontend",
+        shortDescription: "Página web para cafetería usando Bootstrap. Proyecto BETA en desarrollo.",
+        fullDescription: "Landing page diseñada para Café Andino utilizando Bootstrap como framework CSS principal. Proyecto en estado BETA, sin terminar, que contempla secciones de menú, historia del café, ubicación y contacto.",
         images: [
+          /* Café Andino */
           "assets/images/coffeev1.1.PNG",
           "assets/images/coffeev1.2.PNG",
           "assets/images/coffeev1.3.PNG",
@@ -412,12 +169,18 @@
         tags: ["HTML", "CSS", "Bootstrap", "Landing Page"],
         driveLink: null,
         driveLinkLabel: null,
+        note: "🚧 Página estática, sin backend",
         github: "https://github.com/Zacaryx/coffee-page--cafe-andino-",
         demo: "https://coffee-page-cafe-andino.vercel.app/",
       },
       {
-        id: 6,
+        id: 4,
+        title: "AppWebForBusiness Beta v2",
+        category: "Web Frontend",
+        shortDescription: "App web para minimarkets: registro de productos, análisis, ventas y gestión interna. Segunda versión con mejor lógica de backend.",
+        fullDescription: "Aplicación web enfocada a minimarkets para el registro de productos, análisis de productos, ventas y gestión interna. Desarrollada con HTML, CSS, JavaScript y Google Firebase como backend. Esta es la segunda versión (BetaV2) con una lógica de backend significativamente mejorada respecto a la primera versión.",
         images: [
+          /* AppWeb for Business */
           "assets/images/appWebv1.1.PNG",
           "assets/images/appWebv1.2.PNG",
           "assets/images/appWebv1.3.PNG",
@@ -427,8 +190,25 @@
         tags: ["HTML", "CSS", "JavaScript", "Firebase", "Backend", "Gestión"],
         driveLink: null,
         driveLinkLabel: null,
+        note: "🔐 Ingresar con usuario: Zacaryx y contraseña: 123456. Proyecto BETA sin terminar",
         github: "https://github.com/Zacaryx/AppWebForBusinessBetav2",
         demo: "https://app-web-for-business-betav2.vercel.app/",
+      },
+    ];
+
+    /* ─── DATOS: Stack / Habilidades ─────────────────── */
+    const skillsData = [
+      {
+        category: "Frontend",
+        items: ["React", "TypeScript", "JavaScript", "Node.js", "Tailwind CSS", "CSS Grid", "Flexbox"],
+      },
+      {
+        category: "Visualización & Datos",
+        items: ["Excel Avanzado", "SQL Server Management", "Google Firebase", "Power BI"],
+      },
+      {
+        category: "Tooling & Cloud",
+        items: ["Git & GitHub", "Webpack"],
       },
     ];
 
@@ -598,46 +378,6 @@ function WebpImage({ src, alt, className, onError, onClick, style }) {
       const [copiedEmail,     setCopiedEmail]      = useState(false);
       const [formData,   setFormData]   = useState({ name: '', email: '', phone: '', message: '' });
       const [formStatus, setFormStatus] = useState({ submitted: false, loading: false });
-      const [lang, setLang] = useState('es'); // default español
-
-      /* ─── Detección de país al montar ─── */
-      useEffect(() => {
-        fetch('https://ipapi.co/json/')
-          .then(r => r.json())
-          .then(data => {
-            const country = data.country_code || '';
-            // Países angloparlantes → EN
-            const englishCountries = ['US','GB','AU','CA','NZ','IE','ZA','IN','SG','PH','NG','GH','KE','JM','TT','BZ','GY','BB'];
-            if (englishCountries.includes(country)) {
-              setLang('en');
-              document.documentElement.lang = 'en';
-            } else {
-              setLang('es');
-              document.documentElement.lang = 'es';
-            }
-          })
-          .catch(() => {
-            // Si falla la detección → español por defecto
-            setLang('es');
-          });
-      }, []);
-
-      const t = translations[lang];
-
-      /* Combinar datos estáticos con traducciones */
-      const projectsData = projectsMeta.map((meta, idx) => ({
-        ...meta,
-        ...t.proj_data[idx],
-        driveLinkLabel: meta.driveLinkLabel ? meta.driveLinkLabel[lang] : null,
-      }));
-
-      const skillsData = t.skill_categories;
-
-      /* Toggle de idioma manual */
-      const toggleLang = (newLang) => {
-        setLang(newLang);
-        document.documentElement.lang = newLang;
-      };
 
       /* Copiar email al portapapeles */
       const handleCopyEmail = () => {
@@ -685,40 +425,21 @@ function WebpImage({ src, alt, className, onError, onClick, style }) {
             <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
               <a href="#hero" className="flex items-center space-x-2 group">
                 <span className="bg-gradient-to-r from-accentNeon to-accentPurple text-transparent bg-clip-text font-bold text-xl code-font">&lt;EV /&gt;</span>
-                <span className="text-slate-300 font-semibold text-sm tracking-wider uppercase group-hover:text-accentNeon transition-colors duration-300">{lang === 'es' ? 'Portafolio' : 'Portfolio'}</span>
+                <span className="text-slate-300 font-semibold text-sm tracking-wider uppercase group-hover:text-accentNeon transition-colors duration-300">Portafolio</span>
               </a>
               <nav className="hidden md:flex space-x-8 text-sm font-medium tracking-wide">
-                <a href="#habilidades" className="text-slate-400 hover:text-accentNeon transition-colors">{t.nav_skills}</a>
-                <a href="#proyectos"   className="text-slate-400 hover:text-accentNeon transition-colors">{t.nav_projects}</a>
-                <a href="#workflow"    className="text-slate-400 hover:text-accentNeon transition-colors">{t.nav_philosophy}</a>
-                <a href="#contacto"    className="text-slate-400 hover:text-accentNeon transition-colors">{t.nav_contact}</a>
+                <a href="#habilidades" className="text-slate-400 hover:text-accentNeon transition-colors">Habilidades</a>
+                <a href="#proyectos"   className="text-slate-400 hover:text-accentNeon transition-colors">Proyectos</a>
+                <a href="#workflow"    className="text-slate-400 hover:text-accentNeon transition-colors">Filosofía</a>
+                <a href="#contacto"    className="text-slate-400 hover:text-accentNeon transition-colors">Contacto</a>
               </nav>
-              <div className="flex items-center gap-2">
-                {/* Language toggle */}
-                <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 rounded-lg p-1">
-                  <button
-                    onClick={() => toggleLang('es')}
-                    title="Español"
-                    className={"flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 " + (lang === 'es' ? "bg-accentNeon/20 text-accentNeon border border-accentNeon/40" : "text-slate-500 hover:text-slate-300")}
-                  >
-                    <span style={{fontSize:'16px'}} role="img" aria-label="Español">🇪🇸</span>
-                    <span className="hidden sm:inline">ES</span>
-                  </button>
-                  <button
-                    onClick={() => toggleLang('en')}
-                    title="English"
-                    className={"flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 " + (lang === 'en' ? "bg-accentNeon/20 text-accentNeon border border-accentNeon/40" : "text-slate-500 hover:text-slate-300")}
-                  >
-                    <span style={{fontSize:'16px'}} role="img" aria-label="English">🇺🇸</span>
-                    <span className="hidden sm:inline">EN</span>
-                  </button>
-                </div>
+              <div className="flex items-center gap-3">
                 <a href="https://github.com/Zacaryx/portafolio_V3" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-accentNeon transition-colors text-sm px-3 py-2 border border-slate-800 rounded-md flex items-center gap-2">
                   <i className="fa-brands fa-github text-base"></i>
-                  {t.nav_repo}
+                  Repo
                 </a>
                 <a href="#contacto" className="px-4 py-2 text-xs font-semibold uppercase tracking-widest border border-accentNeon/50 text-accentNeon hover:bg-accentNeon/10 rounded-md transition duration-300">
-                  {t.nav_hire} <i className="fa-solid fa-arrow-right ml-1"></i>
+                  Contratar <i className="fa-solid fa-arrow-right ml-1"></i>
                 </a>
               </div>
             </div>
@@ -736,17 +457,19 @@ function WebpImage({ src, alt, className, onError, onClick, style }) {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
                   </span>
-                  <span className="code-font font-semibold">{t.hero_badge}</span>
+                  <span className="code-font font-semibold">Disponible para Proyectos de Software</span>
                 </div>
                 <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
-                  {t.hero_title1} <br />
-                  <span className="bg-gradient-to-r from-accentNeon via-indigo-400 to-accentPurple text-transparent bg-clip-text">{t.hero_title2}</span><br />
-                  {t.hero_title3}
+                  Ingeniero <br />
+                  <span className="bg-gradient-to-r from-accentNeon via-indigo-400 to-accentPurple text-transparent bg-clip-text">de Software</span><br />
+                  Frontend.
                 </h1>
-                <p className="text-slate-400 text-lg max-w-xl leading-relaxed" dangerouslySetInnerHTML={{__html: t.hero_desc}} />
+                <p className="text-slate-400 text-lg max-w-xl leading-relaxed">
+                  Hola, soy <strong className="text-slate-200">Eduardo Zacary Vargas Oyola</strong>. Con <strong className="text-accentNeon">2 años de experiencia</strong> en desarrollo frontend, construyo interfaces web rápidas, limpias y escalables usando <strong className="text-accentNeon">React</strong>, <strong className="text-accentNeon">TypeScript</strong> y herramientas modernas de análisis de datos.
+                </p>
                 <div className="flex flex-wrap gap-4 pt-2">
-                  <a href="#proyectos" className="px-6 py-3 bg-gradient-to-r from-accentNeon to-cyan-600 text-slate-950 font-bold rounded-lg shadow-lg shadow-cyan-950/50 hover:opacity-90 hover:scale-[1.02] transition duration-300">{t.hero_btn_projects}</a>
-                  <a href="#contacto"  className="px-6 py-3 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 font-semibold rounded-lg hover:text-white transition duration-300">{t.hero_btn_contact}</a>
+                  <a href="#proyectos" className="px-6 py-3 bg-gradient-to-r from-accentNeon to-cyan-600 text-slate-950 font-bold rounded-lg shadow-lg shadow-cyan-950/50 hover:opacity-90 hover:scale-[1.02] transition duration-300">Ver Proyectos</a>
+                  <a href="#contacto"  className="px-6 py-3 bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 font-semibold rounded-lg hover:text-white transition duration-300">Contactar</a>
                 </div>
               </div>
               {/* Card decorativa de perfil */}
@@ -779,10 +502,10 @@ function WebpImage({ src, alt, className, onError, onClick, style }) {
           <section className="bg-slate-950/60 border-y border-slate-900/80 py-10">
             <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
               {[
-                { value: t.stat_exp_val,  label: t.stat_exp_label,   color: "text-white" },
-                { value: "21",            label: t.stat_age_label,   color: "text-accentNeon" },
-                { value: t.stat_proj_val, label: t.stat_proj_label,  color: "text-white" },
-                { value: "< 2s",          label: t.stat_perf_label,  color: "text-accentPurple" },
+                { value: "2 Años",  label: "Experiencia",          color: "text-white" },
+                { value: "21",      label: "Años de Edad",         color: "text-accentNeon" },
+                { value: "4 Proy.", label: "Terminados",           color: "text-white" },
+                { value: "< 2s",   label: "Optimización de Carga", color: "text-accentPurple" },
               ].map((stat, i) => (
                 <div key={i} className="text-center md:border-r border-slate-900 last:border-0">
                   <div className={`text-3xl md:text-4xl font-extrabold code-font ${stat.color}`}>{stat.value}</div>
@@ -796,10 +519,10 @@ function WebpImage({ src, alt, className, onError, onClick, style }) {
           <section id="habilidades" className="py-24 max-w-6xl mx-auto px-6 w-full">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
               <div>
-                <p className="text-accentNeon text-xs font-semibold uppercase tracking-widest code-font mb-2">{t.skills_tag}</p>
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{t.skills_title}</h2>
+                <p className="text-accentNeon text-xs font-semibold uppercase tracking-widest code-font mb-2">Stack Tecnológico</p>
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Capacidades de Ingeniería</h2>
               </div>
-              <p className="text-slate-400 max-w-md text-sm mt-4 md:mt-0">{t.skills_desc}</p>
+              <p className="text-slate-400 max-w-md text-sm mt-4 md:mt-0">Dominio del ecosistema frontend moderno combinado con herramientas de análisis y visualización de datos para soluciones completas.</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {skillsData.map((category, idx) => (
@@ -824,8 +547,8 @@ function WebpImage({ src, alt, className, onError, onClick, style }) {
             <div className="max-w-6xl mx-auto px-6">
               <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
                 <div>
-                  <p className="text-accentNeon text-xs font-semibold uppercase tracking-widest code-font mb-2">{t.proj_tag}</p>
-                  <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{t.proj_title}</h2>
+                  <p className="text-accentNeon text-xs font-semibold uppercase tracking-widest code-font mb-2">Trabajo Real</p>
+                  <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Proyectos Terminados</h2>
                 </div>
                 {/* Filtros */}
                 <div className="flex flex-wrap gap-2 mt-6 md:mt-0">
@@ -836,7 +559,7 @@ function WebpImage({ src, alt, className, onError, onClick, style }) {
                           ? "bg-accentNeon text-slate-950 shadow-md shadow-cyan-950"
                           : "bg-slate-900 border border-slate-850 text-slate-400 hover:text-white"
                       }`}
-                    >{t.filter_labels[cat]}</button>
+                    >{cat === "All" ? "Todos" : cat}</button>
                   ))}
                 </div>
               </div>
@@ -888,7 +611,7 @@ function WebpImage({ src, alt, className, onError, onClick, style }) {
                     </div>
                     {/* Botones */}
                     <div className="p-6 pt-0 flex gap-3 flex-wrap">
-                      <button onClick={() => setSelectedProject(project)} className="flex-1 text-center py-2 bg-slate-900 border border-slate-850 hover:border-slate-700 text-slate-200 hover:text-white rounded-lg text-xs font-semibold transition">{t.proj_btn_details}</button>
+                      <button onClick={() => setSelectedProject(project)} className="flex-1 text-center py-2 bg-slate-900 border border-slate-850 hover:border-slate-700 text-slate-200 hover:text-white rounded-lg text-xs font-semibold transition">Ver Detalles</button>
                       {project.github    && <a href={project.github}    target="_blank" rel="noreferrer" className="px-3 py-2 bg-slate-900 border border-slate-850 hover:border-slate-700 text-slate-400 hover:text-accentNeon rounded-lg text-xs transition flex items-center justify-center gap-1"><i className="fa-brands fa-github text-base"></i></a>}
                       {project.demo      && <a href={project.demo}      target="_blank" rel="noreferrer" className="px-3 py-2 bg-accentNeon/10 border border-accentNeon/30 hover:border-accentNeon/60 text-accentNeon rounded-lg text-xs transition flex items-center justify-center gap-1"><i className="fa-solid fa-arrow-up-right-from-square text-sm"></i></a>}
                       {project.driveLink && <a href={project.driveLink} target="_blank" rel="noreferrer" className="px-3 py-2 bg-slate-900 border border-slate-850 hover:border-slate-700 text-slate-400 hover:text-accentNeon rounded-lg text-xs transition flex items-center justify-center gap-1"><i className="fa-brands fa-google-drive text-base"></i></a>}
@@ -903,13 +626,13 @@ function WebpImage({ src, alt, className, onError, onClick, style }) {
           <section id="workflow" className="py-24 max-w-6xl mx-auto px-6 w-full">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
               <div className="lg:col-span-5">
-                <span className="text-accentNeon text-xs font-semibold uppercase tracking-widest code-font">{t.work_tag}</span>
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tight mt-2 mb-6">{t.work_title}</h2>
-                <p className="text-slate-400 leading-relaxed text-sm mb-4">{t.work_desc}</p>
+                <span className="text-accentNeon text-xs font-semibold uppercase tracking-widest code-font">Estándares de Trabajo</span>
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight mt-2 mb-6">Enfoque de Desarrollo</h2>
+                <p className="text-slate-400 leading-relaxed text-sm mb-4">Más allá del código, me enfoco en soluciones que resuelven problemas reales: interfaces rápidas, datos claros y lógica robusta que cualquier equipo pueda mantener.</p>
                 <ul className="space-y-4 text-sm text-slate-300">
-                  <li className="flex items-start"><i className="fa-regular fa-square-check text-accentNeon mt-1 mr-3 text-base"></i><div><strong className="text-slate-200">{t.work_p1_title}</strong> {t.work_p1}</div></li>
-                  <li className="flex items-start"><i className="fa-regular fa-square-check text-accentNeon mt-1 mr-3 text-base"></i><div><strong className="text-slate-200">{t.work_p2_title}</strong> {t.work_p2}</div></li>
-                  <li className="flex items-start"><i className="fa-regular fa-square-check text-accentNeon mt-1 mr-3 text-base"></i><div><strong className="text-slate-200">{t.work_p3_title}</strong> {t.work_p3}</div></li>
+                  <li className="flex items-start"><i className="fa-regular fa-square-check text-accentNeon mt-1 mr-3 text-base"></i><div><strong className="text-slate-200">Rendimiento Real:</strong> Optimización de carga bajo 2 segundos con código modular y prácticas modernas de performance.</div></li>
+                  <li className="flex items-start"><i className="fa-regular fa-square-check text-accentNeon mt-1 mr-3 text-base"></i><div><strong className="text-slate-200">Datos Accionables:</strong> Transformo bases de datos complejas en visualizaciones claras usando Excel, Power BI y Firebase.</div></li>
+                  <li className="flex items-start"><i className="fa-regular fa-square-check text-accentNeon mt-1 mr-3 text-base"></i><div><strong className="text-slate-200">UI Funcional &amp; Limpia:</strong> Componentes responsivos y accesibles con Tailwind CSS, CSS Grid y Flexbox.</div></li>
                 </ul>
               </div>
               {/* Bloque de código decorativo TypeScript */}
@@ -964,17 +687,17 @@ const eduardo = new SoftwareEngineer();`}</pre>
             <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12">
               {/* Info */}
               <div className="lg:col-span-5 space-y-6">
-                <span className="text-accentPurple text-xs font-semibold uppercase tracking-widest code-font">{t.contact_tag}</span>
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{t.contact_title}</h2>
-                <p className="text-slate-400 text-sm leading-relaxed">{t.contact_desc}</p>
+                <span className="text-accentPurple text-xs font-semibold uppercase tracking-widest code-font">¿Interesado en trabajar juntos?</span>
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Hablemos de tu Proyecto</h2>
+                <p className="text-slate-400 text-sm leading-relaxed">Estoy disponible para proyectos freelance, colaboraciones y oportunidades de trabajo. Si necesitas un frontend sólido o análisis de datos, escríbeme.</p>
                 <div className="space-y-4 pt-4">
                   <div className="flex items-center space-x-3 text-sm">
                     <div className="w-10 h-10 bg-slate-900 border border-slate-800 rounded-lg flex items-center justify-center text-accentNeon"><i className="fa-solid fa-envelope"></i></div>
                     <div>
-                      <div className="text-xs text-slate-500 uppercase tracking-widest font-semibold">{t.contact_email_label}</div>
+                      <div className="text-xs text-slate-500 uppercase tracking-widest font-semibold">Correo de Contacto</div>
                       <button onClick={handleCopyEmail} className="text-slate-200 hover:text-accentNeon font-medium transition flex items-center gap-2">
                         eduardozacaryvargasoyola@gmail.com
-                        {copiedEmail ? <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded">{t.copied}</span> : <i className="fa-regular fa-copy text-slate-500 hover:text-slate-300 text-xs"></i>}
+                        {copiedEmail ? <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded">¡Copiado!</span> : <i className="fa-regular fa-copy text-slate-500 hover:text-slate-300 text-xs"></i>}
                       </button>
                     </div>
                   </div>
@@ -988,54 +711,54 @@ const eduardo = new SoftwareEngineer();`}</pre>
                   <div className="flex items-center space-x-3 text-sm">
                     <div className="w-10 h-10 bg-slate-900 border border-slate-800 rounded-lg flex items-center justify-center text-emerald-400"><i className="fa-brands fa-whatsapp"></i></div>
                     <div>
-                      <div className="text-xs text-slate-500 uppercase tracking-widest font-semibold">{t.contact_wa_label}</div>
-                      <a href={t.contact_wa_link} target="_blank" rel="noreferrer" className="text-slate-200 hover:text-emerald-400 font-medium transition flex items-center gap-2">
-                        +51 967 613 400 <span className="text-[10px] bg-emerald-950/40 text-emerald-400 border border-emerald-900/40 px-1.5 py-0.5 rounded">{t.contact_wa_cta}</span>
+                      <div className="text-xs text-slate-500 uppercase tracking-widest font-semibold">WhatsApp</div>
+                      <a href="https://wa.me/51967613400?text=Hola%20Eduardo%2C%20vi%20tu%20portafolio%20y%20me%20interesa%20contactarte." target="_blank" rel="noreferrer" className="text-slate-200 hover:text-emerald-400 font-medium transition flex items-center gap-2">
+                        +51 967 613 400 <span className="text-[10px] bg-emerald-950/40 text-emerald-400 border border-emerald-900/40 px-1.5 py-0.5 rounded">Abrir chat</span>
                       </a>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3 text-sm">
                     <div className="w-10 h-10 bg-slate-900 border border-slate-800 rounded-lg flex items-center justify-center text-accentPurple"><i className="fa-solid fa-location-dot"></i></div>
                     <div>
-                      <div className="text-xs text-slate-500 uppercase tracking-widest font-semibold">{t.contact_location_label}</div>
-                      <div className="text-slate-200 font-medium">{t.contact_location}</div>
+                      <div className="text-xs text-slate-500 uppercase tracking-widest font-semibold">Ubicación</div>
+                      <div className="text-slate-200 font-medium">Lima, Perú — Disponible para remoto global</div>
                     </div>
                   </div>
                 </div>
               </div>
               {/* Formulario */}
               <div className="lg:col-span-7 bg-darkCard border border-slate-900 p-8 rounded-2xl relative">
-                <h3 className="text-xl font-bold mb-6 text-slate-200">{t.contact_form_title}</h3>
+                <h3 className="text-xl font-bold mb-6 text-slate-200">Envíame un mensaje directo</h3>
                 {formStatus.submitted ? (
                   <div className="bg-cyan-950/20 border border-cyan-800/50 p-6 rounded-xl text-center space-y-3">
                     <div className="w-12 h-12 bg-cyan-900/50 rounded-full flex items-center justify-center text-cyan-400 mx-auto text-xl"><i className="fa-solid fa-circle-check"></i></div>
-                    <h4 className="font-bold text-slate-200 text-lg">{t.form_success_title}</h4>
-                    <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">{t.form_success_desc}</p>
-                    <button onClick={() => setFormStatus({ submitted: false, loading: false })} className="mt-2 text-xs font-semibold text-accentNeon hover:underline">{t.form_send_other}</button>
+                    <h4 className="font-bold text-slate-200 text-lg">¡Mensaje enviado!</h4>
+                    <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">Gracias por contactarme. Te responderé lo antes posible.</p>
+                    <button onClick={() => setFormStatus({ submitted: false, loading: false })} className="mt-2 text-xs font-semibold text-accentNeon hover:underline">Enviar otro mensaje</button>
                   </div>
                 ) : (
                   <form onSubmit={handleFormSubmit} className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2">{t.form_name_label} <span className="text-accentNeon">*</span></label>
-                        <input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder={t.form_name_ph} className="w-full bg-slate-900/50 border border-slate-700 focus:border-accentNeon focus:outline-none focus:ring-1 focus:ring-accentNeon rounded-lg px-4 py-2.5 text-sm transition" />
+                        <label className="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2">Tu Nombre <span className="text-accentNeon">*</span></label>
+                        <input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="Ej: Juan Pérez" className="w-full bg-slate-900/50 border border-slate-700 focus:border-accentNeon focus:outline-none focus:ring-1 focus:ring-accentNeon rounded-lg px-4 py-2.5 text-sm transition" />
                       </div>
                       <div>
-                        <label className="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2">{t.form_phone_label} <span className="text-slate-600 normal-case">{t.form_phone_opt}</span></label>
-                        <input type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} placeholder={t.form_phone_ph} className="w-full bg-slate-900/50 border border-slate-700 focus:border-accentNeon focus:outline-none focus:ring-1 focus:ring-accentNeon rounded-lg px-4 py-2.5 text-sm transition" />
+                        <label className="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2">Teléfono <span className="text-slate-600 normal-case">(opcional)</span></label>
+                        <input type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} placeholder="Ej: +51 999 888 777" className="w-full bg-slate-900/50 border border-slate-700 focus:border-accentNeon focus:outline-none focus:ring-1 focus:ring-accentNeon rounded-lg px-4 py-2.5 text-sm transition" />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2">{t.form_email_label} <span className="text-accentNeon">*</span></label>
-                      <input type="email" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder={t.form_email_ph} className="w-full bg-slate-900/50 border border-slate-700 focus:border-accentNeon focus:outline-none focus:ring-1 focus:ring-accentNeon rounded-lg px-4 py-2.5 text-sm transition" />
+                      <label className="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2">Tu Correo Electrónico <span className="text-accentNeon">*</span></label>
+                      <input type="email" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="correo@ejemplo.com" className="w-full bg-slate-900/50 border border-slate-700 focus:border-accentNeon focus:outline-none focus:ring-1 focus:ring-accentNeon rounded-lg px-4 py-2.5 text-sm transition" />
                     </div>
                     <div>
-                      <label className="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2">{t.form_msg_label} <span className="text-accentNeon">*</span></label>
-                      <textarea rows="4" required value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} placeholder={t.form_msg_ph} className="w-full bg-slate-900/50 border border-slate-700 focus:border-accentNeon focus:outline-none focus:ring-1 focus:ring-accentNeon rounded-lg px-4 py-2.5 text-sm transition"></textarea>
+                      <label className="block text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2">Mensaje <span className="text-accentNeon">*</span></label>
+                      <textarea rows="4" required value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} placeholder="Cuéntame sobre tu proyecto..." className="w-full bg-slate-900/50 border border-slate-700 focus:border-accentNeon focus:outline-none focus:ring-1 focus:ring-accentNeon rounded-lg px-4 py-2.5 text-sm transition"></textarea>
                     </div>
-                    {formStatus.error && <p className="text-xs text-rose-400 bg-rose-950/20 border border-rose-900/30 rounded-lg px-3 py-2"><i className="fa-solid fa-triangle-exclamation mr-1"></i> {t.form_error}</p>}
+                    {formStatus.error && <p className="text-xs text-rose-400 bg-rose-950/20 border border-rose-900/30 rounded-lg px-3 py-2"><i className="fa-solid fa-triangle-exclamation mr-1"></i> Hubo un error al enviar. Intenta de nuevo.</p>}
                     <button type="submit" disabled={formStatus.loading} className="w-full py-3 bg-gradient-to-r from-accentNeon to-accentPurple text-slate-950 hover:opacity-95 font-bold uppercase tracking-wider text-xs rounded-lg transition duration-300 flex items-center justify-center gap-2 shadow-md shadow-slate-950 disabled:opacity-60">
-                      {formStatus.loading ? <><i className="fa-solid fa-spinner animate-spin"></i> {t.form_sending}</> : <>{t.form_submit} <i className="fa-solid fa-paper-plane"></i></>}
+                      {formStatus.loading ? <><i className="fa-solid fa-spinner animate-spin"></i> Enviando...</> : <>Enviar Mensaje <i className="fa-solid fa-paper-plane"></i></>}
                     </button>
                   </form>
                 )}
@@ -1060,7 +783,7 @@ const eduardo = new SoftwareEngineer();`}</pre>
                   {/* Galería completa de imágenes del proyecto */}
                   {selectedProject.images && selectedProject.images.length > 0 && <ImageGallery images={selectedProject.images} />}
                   <div>
-                    <h4 className="text-sm font-semibold uppercase text-slate-400 tracking-wider mb-2">{t.modal_desc_label}</h4>
+                    <h4 className="text-sm font-semibold uppercase text-slate-400 tracking-wider mb-2">Descripción del Proyecto</h4>
                     <p className="text-slate-300 text-sm leading-relaxed">{selectedProject.fullDescription}</p>
                   </div>
                   {selectedProject.note && (
@@ -1069,7 +792,7 @@ const eduardo = new SoftwareEngineer();`}</pre>
                     </div>
                   )}
                   <div>
-                    <h4 className="text-sm font-semibold uppercase text-slate-400 tracking-wider mb-2">{t.modal_tech_label}</h4>
+                    <h4 className="text-sm font-semibold uppercase text-slate-400 tracking-wider mb-2">Tecnologías Utilizadas</h4>
                     <div className="flex flex-wrap gap-2">
                       {selectedProject.tags.map((tag, idx) => (
                         <span key={idx} className="px-3 py-1 bg-slate-900 border border-slate-800 text-slate-300 code-font text-xs rounded-lg">{tag}</span>
@@ -1078,9 +801,9 @@ const eduardo = new SoftwareEngineer();`}</pre>
                   </div>
                 </div>
                 <div className="p-6 border-t border-slate-900 bg-slate-950/50 flex gap-4 flex-wrap">
-                  {selectedProject.github    && <a href={selectedProject.github}    target="_blank" rel="noreferrer" className="flex-1 py-3 text-center bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 font-semibold rounded-xl text-xs uppercase tracking-wider transition duration-300 flex items-center justify-center gap-2"><i className="fa-brands fa-github text-sm"></i> {t.modal_github}</a>}
+                  {selectedProject.github    && <a href={selectedProject.github}    target="_blank" rel="noreferrer" className="flex-1 py-3 text-center bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 font-semibold rounded-xl text-xs uppercase tracking-wider transition duration-300 flex items-center justify-center gap-2"><i className="fa-brands fa-github text-sm"></i> Ver en GitHub</a>}
                   {selectedProject.driveLink && <a href={selectedProject.driveLink} target="_blank" rel="noreferrer" className="flex-1 py-3 text-center bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-300 font-semibold rounded-xl text-xs uppercase tracking-wider transition duration-300 flex items-center justify-center gap-2"><i className="fa-brands fa-google-drive text-sm"></i> {selectedProject.driveLinkLabel}</a>}
-                  {selectedProject.demo      && <a href={selectedProject.demo}      target="_blank" rel="noreferrer" className="flex-1 py-3 text-center bg-gradient-to-r from-accentNeon to-cyan-600 text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition duration-300 flex items-center justify-center gap-2 shadow-md shadow-cyan-950/20">{t.modal_demo} <i className="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>}
+                  {selectedProject.demo      && <a href={selectedProject.demo}      target="_blank" rel="noreferrer" className="flex-1 py-3 text-center bg-gradient-to-r from-accentNeon to-cyan-600 text-slate-950 font-bold rounded-xl text-xs uppercase tracking-wider transition duration-300 flex items-center justify-center gap-2 shadow-md shadow-cyan-950/20">Demo en Vivo <i className="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>}
                 </div>
               </div>
             </div>
